@@ -13,24 +13,12 @@ import {
 import { PHASES, phaseById } from '@/content/phases';
 import { withBase } from '@shared/config/site';
 
-const chapters = (await getCollection('timeline')).sort((a, b) => a.data.order - b.data.order);
-const rendered = await Promise.all(
-  chapters.map(async (c) => ({
-    entry: c,
-    Content: (await render(c)).Content,
-    photos: photosByIds(c.data.photos),
-  })),
-);
-const diary = (await getCollection('diary')).sort((a, b) =>
-  (b.data.date ?? '').localeCompare(a.data.date ?? ''),
-);
-const diaryRendered = await Promise.all(
-  diary.map(async (d) => ({ entry: d, Content: (await render(d)).Content })),
-);
-const museum = (await getCollection('museum')).sort((a, b) => a.data.order - b.data.order);
-const museumRendered = await Promise.all(
-  museum.map(async (m) => ({ entry: m, Content: (await render(m)).Content })),
-);
+const rendered = (await withContent(await timelineChapters())).map((c) => ({
+  ...c,
+  photos: photosByIds(c.entry.data.photos),
+}));
+const diaryRendered = await withContent(await diaryEntries());
+const museumRendered = await withContent(await museumItems());
 let photoIndex = 0;
 ---
 
