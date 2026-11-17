@@ -1,0 +1,139 @@
+---
+import CleoSprite from '@/components/character/CleoSprite.astro';
+import { CLEO, daysAlive } from '@shared/config/cleo';
+import { withBase } from '@shared/config/site';
+
+const days = daysAlive();
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__text">
+    <p class="eyebrow">Bem-vinda ao mundinho da</p>
+    <h1 id="hero-title" class="hero__title">
+      <button
+        type="button"
+        class="name-toggle"
+        id="name-toggle"
+        aria-live="polite"
+        aria-label="Alternar entre Cleo e Floquinha"
+      >
+        <span data-name>{CLEO.name}</span>
+        <span class="name-toggle__hint" aria-hidden="true">
+          ↻
+        </span>
+      </button>
+    </h1>
+    <p class="hero__lead">
+      Uma gata creme-acinzentada, de olhos azul-gelo e colete teal, que resolveu transformar a
+      própria história em jogo. Explore as fotos, jogue no parque, ganhe <strong>Cleo Coins</strong>{' '}
+      e decore a casinha dela.
+    </p>
+    {days !== null ? (
+      <p class="hero__counter" data-birth={CLEO.birthDate}>
+        <span class="hero__counter-number" data-days>
+          {days.toLocaleString('pt-BR')}
+        </span>
+        <span>dias de vida (e de bagunça)</span>
+      </p>
+    ) : (
+      <p class="hero__counter muted">
+        O contador de dias de vida aparece aqui quando a data de nascimento for configurada.
+      </p>
+    )}
+    <div class="cluster hero__actions">
+      <a class="btn" href={withBase('/parque')}>
+        Ir para o parque
+      </a>
+      <a class="btn btn--secondary" href={withBase('/historia')}>
+        Conhecer a história
+      </a>
+    </div>
+  </div>
+  <div class="hero__art" aria-hidden="false">
+    <div class="hero__stage">
+      <CleoSprite animation="sitting" frame={0} scale={5} class="hero__sprite" />
+    </div>
+  </div>
+</section>
+
+<script>
+  import { CLEO } from '@shared/config/cleo';
+
+  const btn = document.getElementById('name-toggle');
+  const name = btn?.querySelector('[data-name]');
+  let alt = false;
+  btn?.addEventListener('click', () => {
+    alt = !alt;
+    if (name) name.textContent = alt ? CLEO.nickname : CLEO.name;
+  });
+</script>
+
+<style>
+  .hero {
+    display: grid;
+    gap: var(--space-6);
+    align-items: center;
+    padding: var(--space-5) 0 var(--space-6);
+  }
+  @media (min-width: 760px) {
+    .hero {
+      grid-template-columns: 1.2fr 1fr;
+    }
+  }
+  .hero__title {
+    margin-bottom: var(--space-3);
+  }
+  .name-toggle {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: var(--color-text);
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    cursor: pointer;
+  }
+  .name-toggle:hover [data-name] {
+    color: var(--color-primary-strong);
+  }
+  .name-toggle__hint {
+    font-size: 0.5em;
+    color: var(--color-primary-strong);
+  }
+  .hero__lead {
+    font-size: var(--text-lg);
+    max-width: 38rem;
+  }
+  .hero__counter {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-2);
+    font-weight: 700;
+  }
+  .hero__counter-number {
+    font-size: var(--text-2xl);
+    color: var(--color-primary-strong);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero__art {
+    display: grid;
+    place-items: center;
+  }
+  .hero__stage {
+    display: grid;
+    place-items: end center;
+    width: min(100%, 20rem);
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(
+        circle at 50% 95%,
+        color-mix(in srgb, var(--cleo-tabby) 18%, transparent),
+        transparent 60%
+      ),
+      linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    border: 1px solid var(--color-border);
+    padding-bottom: var(--space-5);
+  }
+</style>

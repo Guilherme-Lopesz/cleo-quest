@@ -10,3 +10,4 @@ playwright-report/
 photos-source/
 *.log
 .DS_Store
+preview-*.png

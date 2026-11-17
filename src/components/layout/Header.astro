@@ -1,0 +1,115 @@
+---
+import { NAV } from '@shared/config/nav';
+import { SITE, withBase } from '@shared/config/site';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => {
+  const full = withBase(href).replace(/\/$/, '') || '/';
+  return href === '/' ? current === full : current.startsWith(full);
+};
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href={withBase('/')} aria-label={`${SITE.name} — início`}>
+      <span class="brand__paw" aria-hidden="true">
+        🐾
+      </span>
+      <span class="brand__name">
+        Cleo<span class="brand__accent">Quest</span>
+      </span>
+    </a>
+    <div class="site-header__wallet" id="wallet-indicator" aria-live="polite">
+      <span class="badge" title="Cleo Coins">
+        <span class="coin" aria-hidden="true">
+          🪙
+        </span>
+        <span data-wallet-balance>—</span>
+        <span class="visually-hidden">Cleo Coins</span>
+      </span>
+    </div>
+  </div>
+  <nav class="site-nav" aria-label="Seções do site">
+    <ul class="container site-nav__list">
+      {NAV.map((item) => (
+        <li>
+          <a
+            href={withBase(item.href)}
+            class:list={['site-nav__link', { 'is-active': isActive(item.href) }]}
+            aria-current={isActive(item.href) ? 'page' : undefined}
+          >
+            <span class="site-nav__icon" aria-hidden="true">
+              {item.icon}
+            </span>
+            <span class="site-nav__label">{item.short}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    gap: var(--space-3);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 900;
+    font-size: var(--text-xl);
+    letter-spacing: -0.02em;
+  }
+  .brand__accent {
+    color: var(--color-primary-strong);
+  }
+  .site-nav__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 var(--space-2);
+    display: flex;
+    gap: var(--space-1);
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .site-nav__list::-webkit-scrollbar {
+    display: none;
+  }
+  .site-nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 40px;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-pill);
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .site-nav__link:hover {
+    background: var(--color-surface-2);
+    color: var(--color-text);
+  }
+  .site-nav__link.is-active {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+  }
+</style>

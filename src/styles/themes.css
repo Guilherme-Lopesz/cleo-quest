@@ -1,0 +1,64 @@
+/* Tema "Hora da Soneca": modo escuro noturno. Aplicado via data-theme ou preferência do sistema. */
+[data-theme='soneca'] {
+  color-scheme: dark;
+  --color-background: #1e2234;
+  --color-surface: #283049;
+  --color-surface-2: #313a57;
+  --color-border: #3f4868;
+  --color-text: #efe8da;
+  --color-text-muted: #b7b0a4;
+  --color-primary: var(--cleo-teal-light);
+  --color-primary-contrast: #0f2d2a;
+  --color-primary-strong: var(--cleo-teal);
+  --color-accent: #e8b8b7;
+  --color-accent-strong: #f0cfcd;
+  --color-coin: #e4c25a;
+  --color-heart: #ef8a8d;
+  --color-success: #7fcf9a;
+  --color-danger: #ef8a8d;
+  --color-focus: #9fd3e6;
+  --color-overlay: rgb(10 12 24 / 0.72);
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+    --color-background: #1e2234;
+    --color-surface: #283049;
+    --color-surface-2: #313a57;
+    --color-border: #3f4868;
+    --color-text: #efe8da;
+    --color-text-muted: #b7b0a4;
+    --color-primary: var(--cleo-teal-light);
+    --color-primary-strong: var(--cleo-teal);
+    --color-accent-strong: #f0cfcd;
+    --color-coin: #e4c25a;
+    --color-heart: #ef8a8d;
+    --color-success: #7fcf9a;
+    --color-danger: #ef8a8d;
+    --color-focus: #9fd3e6;
+    --color-overlay: rgb(10 12 24 / 0.72);
+    --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+    --shadow-md: 0 8px 24px rgb(0 0 0 / 0.4);
+  }
+}
+
+/* Céu estrelado discreto no modo Soneca */
+[data-theme='soneca'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(1px 1px at 12% 18%, #fff8 0, transparent 2px),
+    radial-gradient(1px 1px at 38% 8%, #fff6 0, transparent 2px),
+    radial-gradient(1.5px 1.5px at 72% 22%, #fff9 0, transparent 2px),
+    radial-gradient(1px 1px at 88% 12%, #fff7 0, transparent 2px),
+    radial-gradient(1px 1px at 55% 30%, #fff5 0, transparent 2px),
+    radial-gradient(1.5px 1.5px at 24% 40%, #fff6 0, transparent 2px),
+    radial-gradient(1px 1px at 64% 46%, #fff5 0, transparent 2px),
+    radial-gradient(1px 1px at 92% 38%, #fff6 0, transparent 2px);
+}

@@ -42,7 +42,10 @@ export default defineConfig(
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/switch-exhaustiveness-check': 'error',
+      '@typescript-eslint/switch-exhaustiveness-check': [
+        'error',
+        { considerDefaultExhaustiveForUnions: true },
+      ],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       eqeqeq: ['error', 'always'],
     },
@@ -120,6 +123,14 @@ export default defineConfig(
     languageOptions: {
       parserOptions: { parser: tseslint.parser, extraFileExtensions: ['.astro'] },
     },
+    rules: {
+      ...tseslint.configs.disableTypeChecked.rules,
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
   },
   {
     files: ['**/*.{js,mjs,cjs}'],
@@ -134,11 +145,11 @@ export default defineConfig(
     languageOptions: { globals: { ...globals.browser } },
   },
   {
-    files: ['scripts/**/*.{ts,mjs}', 'tests/**/*.ts', '*.config.ts'],
+    files: ['scripts/**/*.{ts,mts,mjs}', 'tests/**/*.ts', '*.config.ts'],
     languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
   {
-    files: ['tests/**/*.ts', 'scripts/**/*.ts'],
+    files: ['tests/**/*.ts', 'scripts/**/*.{ts,mts}'],
     rules: { 'no-console': 'off', '@typescript-eslint/no-non-null-assertion': 'off' },
   },
   prettier,

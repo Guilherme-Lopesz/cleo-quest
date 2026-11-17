@@ -1,0 +1,76 @@
+/* Tokens de design — base de trabalho do Documento Mestre §2.3, ajustáveis após comparação com fotos reais. */
+:root {
+  /* Paleta da Cleo */
+  --cleo-cream: #e8ddc9;
+  --cleo-cream-light: #f3ebdc;
+  --cleo-gray: #a9a5a0;
+  --cleo-tabby: #786d62;
+  --cleo-tabby-dark: #4a403a;
+  --cleo-pink: #e8b8b7;
+  --cleo-pink-dark: #d49a9a;
+  --cleo-teal: #65afa5;
+  --cleo-teal-dark: #4c8e86;
+  --cleo-teal-light: #8fcbc2;
+  --cleo-ice: #9fd3e6;
+  --cleo-gold: #e4c25a;
+  --cleo-red: #d9686b;
+
+  /* Semânticos (tema claro) */
+  --color-background: #f7f3ec;
+  --color-surface: #fffdf9;
+  --color-surface-2: #f1eadf;
+  --color-border: #e2d8c8;
+  --color-text: #403b36;
+  --color-text-muted: #6f675f;
+  --color-primary: var(--cleo-teal);
+  --color-primary-contrast: #0f2d2a;
+  --color-primary-strong: var(--cleo-teal-dark);
+  --color-accent: var(--cleo-pink);
+  --color-accent-strong: var(--cleo-pink-dark);
+  --color-coin: #c99a2e;
+  --color-heart: #d9686b;
+  --color-success: #4f9a6c;
+  --color-danger: #c4484b;
+  --color-focus: #2f6f8f;
+  --color-overlay: rgb(40 32 28 / 0.6);
+  --shadow-sm: 0 1px 2px rgb(64 59 54 / 0.08), 0 1px 1px rgb(64 59 54 / 0.04);
+  --shadow-md: 0 6px 18px rgb(64 59 54 / 0.12);
+
+  /* Tipografia */
+  --font-sans: 'Nunito', 'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  --font-pixel: 'Courier New', ui-monospace, Menlo, monospace;
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: clamp(2rem, 5vw, 2.75rem);
+  --leading-tight: 1.2;
+  --leading-normal: 1.55;
+
+  /* Espaço e forma */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+  --tap-target: 44px;
+  --content-max: 72rem;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 400ms;
+
+  /* Sprite */
+  --sprite-scale: 3;
+}

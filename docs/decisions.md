@@ -48,7 +48,7 @@ Decisão: Web Audio API pura, sem Howler. Efeitos sintetizados; slots para sons 
 
 ## D-010 — Tipografia e terceiros
 
-Decisão: nenhuma requisição externa (fontes, CDNs, analytics). Pilha de fontes do sistema + fonte pixel gerada localmente para o HUD.
+Decisão: nenhuma requisição externa (fontes, CDNs, analytics). Pilha de fontes do sistema; o HUD usa monoespaçada do sistema com `image-rendering: pixelated` apenas nos sprites. Uma fonte pixel própria pode ser adicionada depois como asset local.
 
 ## D-011 — Pixel art da Cleo
 

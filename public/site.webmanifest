@@ -1,0 +1,10 @@
+{
+  "name": "Cleo Quest",
+  "short_name": "Cleo Quest",
+  "description": "O mundinho da Cleo: história, fotos e minigames.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f3ec",
+  "theme_color": "#65afa5",
+  "icons": [{ "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

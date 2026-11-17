@@ -1,0 +1,111 @@
+---
+import { SITE } from '@shared/config/site';
+---
+
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__controls" role="group" aria-label="Preferências">
+      <button type="button" class="btn btn--secondary" id="toggle-theme" aria-pressed="false">
+        <span aria-hidden="true" data-theme-icon>
+          🌙
+        </span>
+        <span data-theme-label>Hora da Soneca</span>
+      </button>
+      <button type="button" class="btn btn--secondary" id="toggle-sound" aria-pressed="false">
+        <span aria-hidden="true" data-sound-icon>
+          🔇
+        </span>
+        <span data-sound-label>Som desligado</span>
+      </button>
+      <button type="button" class="btn btn--secondary" id="toggle-motion" aria-pressed="false">
+        <span aria-hidden="true">🐢</span>
+        <span data-motion-label>Menos movimento</span>
+      </button>
+      <button type="button" class="btn btn--secondary" id="reset-progress">
+        <span aria-hidden="true">🧹</span>
+        <span>Apagar progresso</span>
+      </button>
+    </div>
+    <p class="muted site-footer__note">
+      O progresso (moedas, itens e conquistas) fica salvo <strong>só neste navegador</strong>.
+      Limpar os dados do site apaga tudo. Cleo Coins não têm valor real.
+    </p>
+    <p class="muted site-footer__credits">
+      Feito com carinho para a Cleo. Pixel art, código e miados fictícios: projeto pessoal ·
+      <a href={SITE.repository} rel="noopener">
+        código-fonte
+      </a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  import {
+    effectiveTheme,
+    loadPreferences,
+    savePreferences,
+    type Preferences,
+  } from '@/features/preferences/preferences';
+
+  const themeBtn = document.getElementById('toggle-theme');
+  const soundBtn = document.getElementById('toggle-sound');
+  const motionBtn = document.getElementById('toggle-motion');
+
+  function render(prefs: Preferences) {
+    const theme = effectiveTheme(prefs);
+    if (themeBtn) {
+      themeBtn.setAttribute('aria-pressed', String(theme === 'soneca'));
+      themeBtn.querySelector('[data-theme-icon]')!.textContent = theme === 'soneca' ? '☀️' : '🌙';
+      themeBtn.querySelector('[data-theme-label]')!.textContent =
+        theme === 'soneca' ? 'Acordar (tema claro)' : 'Hora da Soneca';
+    }
+    if (soundBtn) {
+      soundBtn.setAttribute('aria-pressed', String(!prefs.muted));
+      soundBtn.querySelector('[data-sound-icon]')!.textContent = prefs.muted ? '🔇' : '🔊';
+      soundBtn.querySelector('[data-sound-label]')!.textContent = prefs.muted
+        ? 'Som desligado'
+        : 'Som ligado';
+    }
+    if (motionBtn) {
+      motionBtn.setAttribute('aria-pressed', String(prefs.motion === 'reduced'));
+      motionBtn.querySelector('[data-motion-label]')!.textContent =
+        prefs.motion === 'reduced' ? 'Movimento reduzido' : 'Menos movimento';
+    }
+  }
+
+  themeBtn?.addEventListener('click', () => {
+    const next = effectiveTheme() === 'soneca' ? 'light' : 'soneca';
+    render(savePreferences({ theme: next }));
+  });
+  soundBtn?.addEventListener('click', () => {
+    render(savePreferences({ muted: !loadPreferences().muted }));
+  });
+  motionBtn?.addEventListener('click', () => {
+    const cur = loadPreferences().motion;
+    render(savePreferences({ motion: cur === 'reduced' ? 'system' : 'reduced' }));
+  });
+  render(loadPreferences());
+</script>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-8);
+    padding: var(--space-6) 0 calc(32px * var(--sprite-scale) + var(--space-6));
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .site-footer__inner {
+    display: grid;
+    gap: var(--space-4);
+  }
+  .site-footer__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+  .site-footer__note,
+  .site-footer__credits {
+    font-size: var(--text-sm);
+    margin: 0;
+  }
+</style>

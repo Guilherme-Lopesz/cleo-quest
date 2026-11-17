@@ -1,10 +1,90 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import Hero from '@/components/home/Hero.astro';
+import { LETTER } from '@/content/letter';
+import { NAV } from '@shared/config/nav';
+import { withBase } from '@shared/config/site';
+
+const sections = NAV.filter((n) => n.href !== '/');
+const blurbs: Record<string, string> = {
+  '/historia': 'Capítulos da vida da Cleo, com fotos e comentários dela mesma.',
+  '/galeria': 'Fotos organizadas por fase, com filtros e lightbox.',
+  '/parque': 'Minigames curtos: pegue o novelo, pesque, teste a memória.',
+  '/loja': 'Gaste Cleo Coins em petiscos, brinquedos e roupas.',
+  '/inventario': 'Seus itens, o que está equipado e o que ainda dá para usar.',
+  '/casinha': 'Decore o cantinho da Cleo e veja as reações dela.',
+  '/conquistas': 'Desafios, lembranças e estatísticas de brincadeira.',
+};
 ---
 
 <BaseLayout>
-  <main>
-    <h1>Cleo Quest</h1>
-    <p>Em construção. A Cleo está carregando energia.</p>
-  </main>
+  <Hero />
+
+  <section class="letter card" aria-labelledby="letter-title">
+    <p class="eyebrow">Correspondência felina</p>
+    <h2 id="letter-title">{LETTER.title}</h2>
+    {LETTER.paragraphs.map((p) => (
+      <p>{p}</p>
+    ))}
+    <p class="letter__signature">{LETTER.signature}</p>
+  </section>
+
+  <section class="map" aria-labelledby="map-title">
+    <h2 id="map-title">Por onde começar</h2>
+    <ul class="grid-auto map__list">
+      {sections.map((s) => (
+        <li class="card map__item">
+          <a href={withBase(s.href)} class="map__link">
+            <span class="map__icon" aria-hidden="true">
+              {s.icon}
+            </span>
+            <span class="map__title">{s.label}</span>
+            <span class="muted">{blurbs[s.href]}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
 </BaseLayout>
+
+<style>
+  .letter {
+    margin-top: var(--space-6);
+    max-width: 44rem;
+  }
+  .letter__signature {
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+  .map {
+    margin-top: var(--space-7);
+  }
+  .map__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .map__item {
+    padding: 0;
+  }
+  .map__link {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-5);
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+    border-radius: inherit;
+  }
+  .map__link:hover {
+    background: var(--color-surface-2);
+  }
+  .map__icon {
+    font-size: 1.75rem;
+  }
+  .map__title {
+    font-weight: 800;
+    font-size: var(--text-lg);
+  }
+</style>

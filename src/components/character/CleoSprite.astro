@@ -1,0 +1,68 @@
+---
+/**
+ * Cleo estática (sem JS): um frame de uma animação, com camadas de roupa.
+ * Útil em hero, loja e cartões.
+ */
+import { CLEO_SPRITES } from '@/features/character/manifest.generated';
+import { outfitLayers, DEFAULT_OUTFIT, type Outfit } from '@/features/character/outfit';
+
+interface Props {
+  animation?: keyof typeof CLEO_SPRITES.animations;
+  frame?: number;
+  scale?: number;
+  outfit?: Outfit;
+  facing?: 1 | -1;
+  label?: string;
+  class?: string;
+}
+const {
+  animation = 'idle',
+  frame = 0,
+  scale = 4,
+  outfit = DEFAULT_OUTFIT,
+  facing = 1,
+  label = 'Cleo, uma gata creme-acinzentada de colete teal, em pixel art',
+  class: className = '',
+} = Astro.props;
+const anim = CLEO_SPRITES.animations[animation];
+const col = Math.min(frame, anim.frames - 1);
+const pos = `${-col * CLEO_SPRITES.frameWidth}px ${-anim.row * CLEO_SPRITES.frameHeight}px`;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const layers = outfitLayers(outfit).filter((l) => l !== 'fx');
+---
+
+<span
+  class:list={['cleo-sprite pixel', className]}
+  role="img"
+  aria-label={label}
+  style={`--w:${CLEO_SPRITES.frameWidth}px;--h:${CLEO_SPRITES.frameHeight}px;--sprite-scale:${scale};--facing:${facing}`}
+>
+  {layers.map((layer, i) => (
+    <span
+      class="cleo-sprite__layer"
+      data-layer={layer}
+      style={`background-image:url(${base}/pixel-art/cleo/${layer}.png);background-position:${pos};z-index:${i}`}
+    />
+  ))}
+</span>
+
+<style is:global>
+  .cleo-sprite {
+    --facing: 1;
+    display: inline-block;
+    position: relative;
+    width: calc(var(--w) * var(--sprite-scale));
+    height: calc(var(--h) * var(--sprite-scale));
+    transform: scaleX(var(--facing));
+  }
+  .cleo-sprite__layer {
+    position: absolute;
+    inset: 0;
+    width: var(--w);
+    height: var(--h);
+    transform: scale(var(--sprite-scale));
+    transform-origin: top left;
+    background-repeat: no-repeat;
+    image-rendering: pixelated;
+  }
+</style>
