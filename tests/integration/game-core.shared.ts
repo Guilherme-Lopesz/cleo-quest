@@ -142,7 +142,7 @@ export function gameCoreContractSuite(label: string, factory: () => ProgressStor
       expect(r.ok).toBe(false);
       if (!r.ok) expect(r.error.code).toBe('INSUFFICIENT_FUNDS');
       expect(await core.economy.getBalance()).toBe(50);
-      expect(await core.inventory.list()).toEqual([]);
+      expect((await core.inventory.list()).map((e) => e.itemId)).toEqual(['colete-teal']);
     });
 
     it('equipar exige posse; depois de comprar, equipa e persiste', async () => {
@@ -181,7 +181,7 @@ export function gameCoreContractSuite(label: string, factory: () => ProgressStor
       const col = (await core.achievements.listRecords()).find(
         (r) => r.achievementId === 'colecionador',
       );
-      expect(col?.progress).toBe(1);
+      expect(col?.progress).toBe(2); // colete do kit inicial + petisco
       expect(col?.unlockedAt).toBeUndefined();
     });
 
@@ -211,6 +211,7 @@ export function gameCoreContractSuite(label: string, factory: () => ProgressStor
       await core.shop.purchase(itemId('laco'));
       await core.progress.resetAll();
       expect(await core.inventory.list()).toEqual([]);
+      expect(await core.economy.getBalance()).toBe(0);
       await core.init();
       expect(await core.economy.getBalance()).toBe(50);
     });
@@ -224,3 +225,14 @@ export function gameCoreContractSuite(label: string, factory: () => ProgressStor
     });
   });
 }
+
+describe('kit inicial', () => {
+  it('na primeira visita o colete teal já está no inventário e equipado', async () => {
+    const { MemoryProgressStore } = await import('@infra/persistence/memory-store');
+    const core = makeCore(new MemoryProgressStore());
+    await core.init();
+    expect((await core.inventory.getCustomization()).equipped.BODY).toBe('colete-teal');
+    expect(await core.economy.getBalance()).toBe(50);
+    expect(core.ui.get().equipped.BODY).toBe('colete-teal');
+  });
+});

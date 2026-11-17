@@ -1,8 +1,127 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import CleoSprite from '@/components/character/CleoSprite.astro';
+import ItemCard from '@/components/shop/ItemCard.astro';
+import { CATALOG_ITEMS } from '@core/config/catalog';
+import { CATEGORY_LABELS } from '@/features/ui/format';
+
+const categories = [...new Set(CATALOG_ITEMS.filter((i) => i.enabled).map((i) => i.category))];
 ---
 
-<BaseLayout title="Loja" description="Itens para a Cleo, pagos em Cleo Coins.">
-  <h1>Loja</h1>
-  <p class="muted">Itens para a Cleo, pagos em Cleo Coins. Esta seção está sendo construída.</p>
+<BaseLayout
+  title="Loja"
+  description="Itens para a Cleo, pagos em Cleo Coins. Nada aqui custa dinheiro de verdade."
+>
+  <header class="shop-head">
+    <div>
+      <p class="eyebrow">Petshop da Cleo</p>
+      <h1>Loja</h1>
+      <p class="muted">
+        A atendente está em horário de soneca, mas o caixa funciona. Seu saldo:
+        <strong class="coin">
+          <span data-shop-balance>—</span> 🪙
+        </strong>
+      </p>
+      <p class="muted shop-head__note">
+        Itens são elementos de jogo, não recomendações de alimentação ou cuidados reais para
+        animais.
+      </p>
+    </div>
+    <div class="shop-counter" aria-hidden="true">
+      <div class="shop-counter__desk"></div>
+      <CleoSprite animation="sleeping" frame={0} scale={3} class="shop-counter__cleo" />
+      <span class="shop-counter__sign">CAIXA</span>
+    </div>
+  </header>
+
+  <nav class="shop-tabs" aria-label="Categorias">
+    <button type="button" class="btn btn--secondary is-active" data-category="">
+      Tudo
+    </button>
+    {categories.map((c) => (
+      <button type="button" class="btn btn--secondary" data-category={c}>
+        {CATEGORY_LABELS[c]}
+      </button>
+    ))}
+  </nav>
+
+  <ul class="grid-auto shop-grid" id="shop-grid">
+    {CATALOG_ITEMS.filter((i) => i.enabled).map((item) => (
+      <ItemCard item={item} mode="shop" />
+    ))}
+  </ul>
 </BaseLayout>
+
+<script>
+  import { mountShop } from '@/features/shop/shop-page';
+  void mountShop();
+</script>
+
+<style>
+  .shop-head {
+    display: grid;
+    gap: var(--space-4);
+    align-items: end;
+    margin-bottom: var(--space-5);
+  }
+  @media (min-width: 720px) {
+    .shop-head {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  .shop-head__note {
+    font-size: var(--text-sm);
+  }
+  .shop-counter {
+    position: relative;
+    width: 14rem;
+    height: 9rem;
+    display: grid;
+    place-items: end center;
+    background: linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .shop-counter__desk {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2.5rem;
+    background: var(--cleo-tabby);
+    border-top: 4px solid var(--cleo-tabby-dark);
+  }
+  .shop-counter__cleo {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.6rem;
+  }
+  .shop-counter__sign {
+    position: absolute;
+    bottom: 0.6rem;
+    font-family: var(--font-pixel);
+    font-size: var(--text-xs);
+    letter-spacing: 0.2em;
+    color: var(--cleo-cream);
+    z-index: 2;
+  }
+  .shop-tabs {
+    display: flex;
+    gap: var(--space-2);
+    overflow-x: auto;
+    padding-bottom: var(--space-2);
+    margin-bottom: var(--space-4);
+    scrollbar-width: none;
+  }
+  .shop-tabs .is-active {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border-color: transparent;
+  }
+  .shop-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

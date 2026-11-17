@@ -1,0 +1,149 @@
+---
+import type { CatalogItem } from '@core/contracts';
+import { KIND_LABELS, SLOT_LABELS, itemImage } from '@/features/ui/format';
+
+interface Props {
+  item: CatalogItem;
+  mode: 'shop' | 'inventory';
+}
+const { item, mode } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<li
+  class="item-card card"
+  data-item-id={item.id}
+  data-kind={item.kind}
+  data-category={item.category}
+  data-price={item.price}
+  data-stackable={item.stackable}
+  data-state="available"
+>
+  <img
+    class="item-card__img pixel"
+    src={itemImage(base, item.image)}
+    alt=""
+    width="16"
+    height="16"
+    loading="lazy"
+    decoding="async"
+  />
+  <div class="item-card__body">
+    <h3 class="item-card__name">{item.name}</h3>
+    <p class="item-card__desc">{item.description}</p>
+    <p class="item-card__meta muted">
+      <span class="badge">{KIND_LABELS[item.kind]}</span>
+      {item.equipSlot && <span class="badge">{SLOT_LABELS[item.equipSlot]}</span>}
+      {item.room && <span class="badge">casinha: {item.room}</span>}
+      <span class="item-card__qty badge" data-qty hidden></span>
+    </p>
+  </div>
+  <div class="item-card__actions">
+    {mode === 'shop' ? (
+      <>
+        <span class="item-card__price coin">🪙 {item.price === 0 ? 'grátis' : item.price}</span>
+        <button
+          type="button"
+          class="btn item-card__buy"
+          data-action="buy"
+          aria-describedby={`price-${item.id}`}
+        >
+          Comprar
+        </button>
+        <span id={`price-${item.id}`} class="visually-hidden">
+          {item.name}, {item.price} Cleo Coins
+        </span>
+      </>
+    ) : (
+      <>
+        {item.equipSlot && (
+          <button type="button" class="btn item-card__equip" data-action="equip">
+            Equipar
+          </button>
+        )}
+        {item.kind === 'CONSUMABLE' && (
+          <button type="button" class="btn item-card__use" data-action="use">
+            Dar para a Cleo
+          </button>
+        )}
+        {item.kind === 'FURNITURE' && (
+          <a class="btn btn--secondary" href={`${import.meta.env.BASE_URL}casinha/`}>
+            Colocar na casinha
+          </a>
+        )}
+      </>
+    )}
+    <span class="item-card__status" data-status aria-live="polite"></span>
+  </div>
+</li>
+
+<style is:global>
+  .item-card {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: var(--space-3) var(--space-4);
+    padding: var(--space-4);
+    align-items: start;
+    position: relative;
+  }
+  .item-card__img {
+    width: 64px;
+    height: 64px;
+    image-rendering: pixelated;
+    background: var(--color-surface-2);
+    border-radius: var(--radius-md);
+    padding: 8px;
+  }
+  .item-card__name {
+    margin: 0 0 var(--space-1);
+    font-size: var(--text-lg);
+  }
+  .item-card__desc {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .item-card__meta {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+  .item-card__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+  .item-card__price {
+    font-weight: 800;
+  }
+  .item-card__status {
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+  .item-card[data-state='owned'] .item-card__buy,
+  .item-card[data-state='equipped'] .item-card__buy,
+  .item-card[data-state='maxed'] .item-card__buy {
+    display: none;
+  }
+  .item-card[data-state='equipped'] {
+    outline: 2px solid var(--color-primary);
+  }
+  .item-card[data-state='equipped'] .item-card__equip::before {
+    content: 'Remover ';
+  }
+  .item-card[data-state='equipped'] .item-card__equip::after {
+    content: '';
+  }
+  .item-card[data-state='consumed'] .item-card__use {
+    display: none;
+  }
+  .item-card[data-busy='true'] {
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .item-card[hidden] {
+    display: none;
+  }
+</style>

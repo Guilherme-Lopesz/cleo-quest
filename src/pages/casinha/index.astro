@@ -1,8 +1,241 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { HOUSE_SLOTS } from '@core/domain/house-rules';
+import { withBase } from '@shared/config/site';
+
+const rooms: { id: string; title: string; icon: string; blurb: string }[] = [
+  { id: 'quarto', title: 'Quarto', icon: '🛏️', blurb: 'Cama, cobertor e sonecas estratégicas.' },
+  {
+    id: 'cozinha',
+    title: 'Cozinha',
+    icon: '🍽️',
+    blurb: 'Potes de ração e água. Fiscalização constante.',
+  },
+  {
+    id: 'brincadeiras',
+    title: 'Área de brincadeiras',
+    icon: '🧶',
+    blurb: 'Novelos, ratinhos e o arranhador.',
+  },
+  {
+    id: 'jardim',
+    title: 'Jardim',
+    icon: '🌿',
+    blurb: 'Plantas corajosas e borboletas de passagem.',
+  },
+];
 ---
 
-<BaseLayout title="Casinha da Cleo" description="O cantinho decorável da Cleo.">
-  <h1>Casinha da Cleo</h1>
-  <p class="muted">O cantinho decorável da Cleo. Esta seção está sendo construída.</p>
+<BaseLayout
+  title="Casinha da Cleo"
+  description="Decore o cantinho da Cleo com móveis comprados na loja e veja as reações dela."
+>
+  <header class="house-head">
+    <p class="eyebrow">Lar, doce lar</p>
+    <h1>Casinha da Cleo</h1>
+    <p class="muted">
+      Compre móveis na <a href={withBase('/loja')}>loja</a>, coloque nos cantinhos e toque neles
+      para ver a Cleo reagir. Nada aqui exige manutenção: a casinha é só diversão.
+    </p>
+  </header>
+
+  <div class="house" id="house" data-asset-base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+    {rooms.map((room) => (
+      <section class="room card" data-room={room.id} aria-labelledby={`room-${room.id}`}>
+        <h2 id={`room-${room.id}`} class="room__title">
+          <span aria-hidden="true">{room.icon}</span> {room.title}
+        </h2>
+        <p class="muted room__blurb">{room.blurb}</p>
+        <div class="room__cleo" data-cleo-anchor={room.id} aria-hidden="true" />
+        <ul class="room__slots">
+          {HOUSE_SLOTS.filter((s) => s.room === room.id).map((slot) => (
+            <li class="slot" data-slot={slot.id} data-state="empty">
+              <span class="slot__label">{slot.label}</span>
+              <button
+                type="button"
+                class="slot__btn"
+                data-slot-action="open"
+                aria-label={`${slot.label}: vazio. Escolher item`}
+              >
+                <img class="slot__img pixel" alt="" width="16" height="16" hidden />
+                <span class="slot__placeholder">+</span>
+              </button>
+              <span class="slot__name muted" data-slot-name />
+              <button
+                type="button"
+                class="btn btn--secondary slot__remove"
+                data-slot-action="remove"
+                hidden
+              >
+                Tirar
+              </button>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+  </div>
+
+  <dialog id="house-chooser" class="chooser" aria-label="Escolher item para o cantinho">
+    <form method="dialog" class="chooser__panel">
+      <h2 class="chooser__title">Escolher item</h2>
+      <ul class="chooser__list" id="chooser-list"></ul>
+      <p class="muted" id="chooser-empty" hidden>
+        Você ainda não tem móveis para este cantinho. <a href={withBase('/loja')}>Ver loja</a>
+      </p>
+      <button type="submit" class="btn btn--secondary">
+        Cancelar
+      </button>
+    </form>
+  </dialog>
 </BaseLayout>
+
+<script>
+  import { mountHouse } from '@/features/house/house-page';
+  void mountHouse();
+</script>
+
+<style is:global>
+  .house-head {
+    margin-bottom: var(--space-5);
+  }
+  .house {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  }
+  .room {
+    position: relative;
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+    background: linear-gradient(
+      180deg,
+      var(--color-surface) 0 62%,
+      color-mix(in srgb, var(--cleo-tabby) 20%, var(--color-surface)) 62%
+    );
+    min-height: 16rem;
+  }
+  .room[data-room='jardim'] {
+    background: linear-gradient(
+      180deg,
+      var(--color-surface) 0 62%,
+      color-mix(in srgb, #7fbf6a 35%, var(--color-surface)) 62%
+    );
+  }
+  .room__title {
+    margin: 0;
+    font-size: var(--text-lg);
+  }
+  .room__blurb {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .room__cleo {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-4);
+    width: 96px;
+    height: 96px;
+    display: grid;
+    place-items: end center;
+    pointer-events: none;
+  }
+  .room__slots {
+    list-style: none;
+    margin: auto 0 0;
+    padding: 0;
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+  .slot {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-1);
+    width: 6.5rem;
+  }
+  .slot__label {
+    font-size: var(--text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+  .slot__btn {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-md);
+    border: 2px dashed var(--color-border);
+    background: var(--color-surface);
+    display: grid;
+    place-items: center;
+    font-size: var(--text-2xl);
+    color: var(--color-text-muted);
+  }
+  .slot[data-state='filled'] .slot__btn {
+    border-style: solid;
+    border-color: var(--color-primary);
+  }
+  .slot[data-state='filled'] .slot__placeholder {
+    display: none;
+  }
+  .slot__img {
+    width: 48px;
+    height: 48px;
+    image-rendering: pixelated;
+  }
+  .slot__name {
+    font-size: var(--text-xs);
+    text-align: center;
+    min-height: 1.2em;
+  }
+  .slot__remove {
+    min-height: 32px;
+    padding: 0 var(--space-3);
+    font-size: var(--text-xs);
+  }
+  .chooser {
+    border: 0;
+    padding: 0;
+    background: transparent;
+    max-width: 100vw;
+  }
+  .chooser::backdrop {
+    background: var(--color-overlay);
+  }
+  .chooser__panel {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    width: min(92vw, 24rem);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .chooser__title {
+    margin: 0;
+  }
+  .chooser__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .chooser__item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    width: 100%;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+    text-align: left;
+  }
+  .chooser__item img {
+    width: 32px;
+    height: 32px;
+    image-rendering: pixelated;
+  }
+</style>

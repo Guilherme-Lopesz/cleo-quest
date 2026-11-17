@@ -47,7 +47,6 @@
     "stackable": true,
     "maxQuantity": 10
   },
-
   {
     "id": "novelo-colorido",
     "name": "Novelo colorido",
@@ -57,8 +56,7 @@
     "price": 30,
     "image": "novelo",
     "enabled": true,
-    "stackable": false,
-    "room": "brincadeiras"
+    "stackable": false
   },
   {
     "id": "ratinho",
@@ -69,8 +67,7 @@
     "price": 35,
     "image": "ratinho",
     "enabled": true,
-    "stackable": false,
-    "room": "brincadeiras"
+    "stackable": false
   },
   {
     "id": "varinha-penas",
@@ -94,7 +91,6 @@
     "enabled": true,
     "stackable": false
   },
-
   {
     "id": "pote-racao",
     "name": "Pote de ração",
@@ -184,7 +180,6 @@
     "room": "brincadeiras",
     "interaction": "play"
   },
-
   {
     "id": "colete-teal",
     "name": "Colete teal",
@@ -250,7 +245,6 @@
     "equipSlot": "NECK",
     "spriteLayer": "tie"
   },
-
   {
     "id": "lembranca-foto",
     "name": "Porta-retrato",

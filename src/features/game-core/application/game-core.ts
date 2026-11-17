@@ -75,9 +75,18 @@ export class GameCore {
       return;
     }
     await this.economy.grantWelcomeBonus();
+    if (profile.value.created) await this.grantStarterKit();
     await this.refreshUi();
     this.bus.onAny(() => void this.refreshUi());
     this.ui.set({ ready: true });
+  }
+
+  /** Kit inicial: o colete teal (preço 0) já vem no inventário e equipado — é a identidade da Cleo. */
+  private async grantStarterKit(): Promise<void> {
+    const vest = this.catalog.list().find((i) => i.spriteLayer === 'vest');
+    if (!vest) return;
+    const granted = await this.inventory.grant(vest.id);
+    if (granted.ok) await this.inventory.equip(vest.id);
   }
 
   async refreshUi(): Promise<void> {

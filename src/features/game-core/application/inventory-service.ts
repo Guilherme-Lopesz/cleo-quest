@@ -67,6 +67,26 @@ export class InventoryService {
     return result;
   }
 
+  /** Concessão pelo sistema (kit inicial, eventos): sem débito, sem recibo, sem evento de compra. */
+  async grant(itemId: ItemId, quantity = 1): Promise<Result<InventoryEntry, DomainError>> {
+    const { store, clock, catalog } = this.deps;
+    if (!catalog.get(itemId)) return err(domainError('ITEM_NOT_FOUND', 'Item desconhecido.'));
+    return guarded(() =>
+      store.transaction(['inventory'], async (t) => {
+        const now = clock.now();
+        const current = await t.inventory.get(itemId);
+        const next: InventoryEntry = {
+          itemId,
+          quantity: (current?.quantity ?? 0) + quantity,
+          acquiredAt: current?.acquiredAt ?? now.toISOString(),
+          consumed: current?.consumed ?? 0,
+        };
+        await t.inventory.put(next);
+        return ok(next);
+      }),
+    );
+  }
+
   /** Consumir reduz a quantidade utilizável; o item permanece no histórico do inventário. */
   async consume(itemId: ItemId): Promise<Result<InventoryEntry, DomainError>> {
     const { store, bus, catalog } = this.deps;

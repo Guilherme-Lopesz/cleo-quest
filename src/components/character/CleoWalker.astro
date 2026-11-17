@@ -19,6 +19,28 @@
     const handle = mountWalker(host, host.dataset['assetBase'] ?? '');
     // expõe para integrações (eventos de recompensa, loja etc.)
     (window as unknown as { cleoWalker?: typeof handle }).cleoWalker = handle;
+    // roupa equipada vem do Game Core (carregado quando o navegador estiver ocioso)
+    const schedule = (fn: () => void) =>
+      'requestIdleCallback' in window
+        ? requestIdleCallback(fn, { timeout: 2000 })
+        : setTimeout(fn, 400);
+    schedule(() => {
+      void Promise.all([
+        import('@/features/game-core'),
+        import('@/features/character/outfit-sync'),
+      ]).then(async ([{ getGameCore }, { outfitFromCustomization }]) => {
+        const core = await getGameCore();
+        core.ui.subscribe((s) => {
+          if (s.ready)
+            handle.setOutfit(outfitFromCustomization(s.equipped, (id) => core.catalog.get(id)));
+        });
+        core.bus.on('RewardGranted', (e) => {
+          if (e.amount > 0) handle.react('happy');
+        });
+        core.bus.on('ItemConsumed', () => handle.use('consumable'));
+        core.bus.on('AchievementUnlocked', () => handle.react('happy'));
+      });
+    });
   }
 </script>
 

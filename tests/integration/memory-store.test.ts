@@ -15,6 +15,6 @@ describe('rollback em memória', () => {
     if (!r.ok) expect(r.error.code).toBe('PERSISTENCE_FAILURE');
     store.failOnPut = null;
     expect(await core.economy.getBalance()).toBe(50);
-    expect(await core.inventory.list()).toEqual([]);
+    expect((await core.inventory.list()).map((e) => e.itemId)).toEqual(['colete-teal']);
   });
 });

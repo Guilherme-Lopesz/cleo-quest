@@ -46,6 +46,11 @@ export default defineConfig(
         'error',
         { considerDefaultExhaustiveForUnions: true },
       ],
+      // handlers async em addEventListener são aceitos; erros são tratados dentro deles
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        { checksVoidReturn: { arguments: false, attributes: false } },
+      ],
       'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
       eqeqeq: ['error', 'always'],
     },

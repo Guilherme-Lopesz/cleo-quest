@@ -1,8 +1,85 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import ItemCard from '@/components/shop/ItemCard.astro';
+import { CATALOG_ITEMS } from '@core/config/catalog';
+import { withBase } from '@shared/config/site';
 ---
 
-<BaseLayout title="Inventário" description="Seus itens e o que está equipado.">
-  <h1>Inventário</h1>
-  <p class="muted">Seus itens e o que está equipado. Esta seção está sendo construída.</p>
+<BaseLayout
+  title="Inventário"
+  description="Seus itens: o que está equipado, o que a Cleo pode usar e o que vai para a casinha."
+>
+  <header class="inv-head">
+    <div>
+      <p class="eyebrow">Mochila</p>
+      <h1>Inventário</h1>
+      <p class="muted" id="inv-summary">
+        Carregando seus itens…
+      </p>
+    </div>
+    <div class="inv-preview card" aria-label="Prévia da Cleo com os itens equipados">
+      <div
+        id="inv-preview-stage"
+        class="inv-preview__stage"
+        data-asset-base={import.meta.env.BASE_URL.replace(/\/$/, '')}
+      ></div>
+      <p class="muted inv-preview__caption">Assim a Cleo está agora.</p>
+      <div class="cluster" id="inv-slots"></div>
+    </div>
+  </header>
+
+  <p class="muted" id="inv-empty" hidden>
+    Nada por aqui ainda. Ganhe moedas no <a href={withBase('/parque')}>parque</a> e visite a{' '}
+    <a href={withBase('/loja')}>loja</a>.
+  </p>
+  <ul class="grid-auto inv-grid" id="inv-grid">
+    {CATALOG_ITEMS.map((item) => (
+      <ItemCard item={item} mode="inventory" />
+    ))}
+  </ul>
 </BaseLayout>
+
+<script>
+  import { mountInventory } from '@/features/inventory/inventory-page';
+  void mountInventory();
+</script>
+
+<style>
+  .inv-head {
+    display: grid;
+    gap: var(--space-4);
+    margin-bottom: var(--space-5);
+  }
+  @media (min-width: 720px) {
+    .inv-head {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+    }
+  }
+  .inv-preview {
+    display: grid;
+    justify-items: center;
+    gap: var(--space-2);
+    min-width: 14rem;
+  }
+  .inv-preview__stage {
+    display: grid;
+    place-items: end center;
+    width: 8rem;
+    height: 8rem;
+    background: radial-gradient(
+      circle at 50% 90%,
+      color-mix(in srgb, var(--cleo-tabby) 18%, transparent),
+      transparent 60%
+    );
+  }
+  .inv-preview__caption {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+  .inv-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+</style>

@@ -24,7 +24,7 @@ describe('Dexie: atomicidade, persistência e recuperação', () => {
     if (!r.ok) expect(r.error.code).toBe('PERSISTENCE_FAILURE');
     db.purchases.hook('creating').unsubscribe(sabotage);
     expect(await core.economy.getBalance()).toBe(50);
-    expect(await core.inventory.list()).toEqual([]);
+    expect((await core.inventory.list()).map((e) => e.itemId)).toEqual(['colete-teal']);
     expect(await db.purchases.count()).toBe(0);
   });
 

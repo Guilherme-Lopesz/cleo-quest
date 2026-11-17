@@ -85,6 +85,20 @@ import { SITE } from '@shared/config/site';
     render(savePreferences({ motion: cur === 'reduced' ? 'system' : 'reduced' }));
   });
   render(loadPreferences());
+
+  // Apagar progresso: confirmação explícita (SAD §9.5); depois o Core reinicia do zero.
+  document.getElementById('reset-progress')?.addEventListener('click', async () => {
+    const ok = window.confirm(
+      'Apagar todo o progresso deste navegador? Moedas, itens, conquistas e decoração serão perdidos. Isso não pode ser desfeito.',
+    );
+    if (!ok) return;
+    const { getGameCore } = await import('@/features/game-core');
+    const core = await getGameCore();
+    await core.progress.resetAll();
+    await core.init();
+    const { toast } = await import('@/features/ui/toast');
+    toast('Progresso apagado. A Cleo fingiu que não viu.', 'info');
+  });
 </script>
 
 <style>
