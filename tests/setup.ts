@@ -4,5 +4,9 @@ import { IDBFactory } from 'fake-indexeddb';
 
 // Banco limpo a cada teste: evita vazamento de estado entre casos.
 beforeEach(() => {
-  indexedDB = new IDBFactory();
+  Object.defineProperty(globalThis, 'indexedDB', {
+    value: new IDBFactory(),
+    configurable: true,
+    writable: true,
+  });
 });
