@@ -110,7 +110,17 @@ let photoIndex = 0;
 
   <section class="museum" aria-labelledby="museum-title">
     <p class="eyebrow">Acervo</p>
-    <h2 id="museum-title">Museu das coisas importantes</h2>
+    <h2 id="museum-title">
+      Museu das coisas importantes
+      <button
+        type="button"
+        class="secret-box"
+        data-easter-egg="caixa-secreta"
+        aria-label="Uma caixa suspeita"
+      >
+        📦
+      </button>
+    </h2>
     <ul class="grid-auto museum__list">
       {museumRendered.map(({ entry, Content }) => {
         const photo = entry.data.photo ? photoById(entry.data.photo) : undefined;
@@ -217,6 +227,19 @@ let photoIndex = 0;
     object-fit: cover;
     border-radius: var(--radius-md);
     margin-bottom: var(--space-3);
+  }
+  .secret-box {
+    background: none;
+    border: 0;
+    font-size: 0.6em;
+    opacity: 0.25;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: opacity var(--dur-base) var(--ease);
+  }
+  .secret-box:hover,
+  .secret-box:focus-visible {
+    opacity: 1;
   }
   .diary__text :global(p:last-child),
   .museum__text :global(p:last-child) {

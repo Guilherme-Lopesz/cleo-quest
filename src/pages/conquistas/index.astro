@@ -1,8 +1,203 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import { ACHIEVEMENTS } from '@core/config/achievements';
+import { GAMES } from '@/features/game-engine/registry';
 ---
 
-<BaseLayout title="Conquistas" description="Desafios e lembranças desbloqueadas.">
-  <h1>Conquistas</h1>
-  <p class="muted">Desafios e lembranças desbloqueadas. Esta seção está sendo construída.</p>
+<BaseLayout
+  title="Conquistas"
+  description="Desafios, lembranças desbloqueadas e estatísticas de brincadeira."
+>
+  <header class="ach-head">
+    <p class="eyebrow">Troféus de gata</p>
+    <h1>Conquistas</h1>
+    <p class="muted" id="ach-summary">
+      Carregando…
+    </p>
+  </header>
+
+  <ul class="grid-auto ach-grid" id="ach-grid">
+    {ACHIEVEMENTS.map((a) => (
+      <li
+        class="card ach"
+        data-achievement-id={a.id}
+        data-secret={a.secret ?? false}
+        data-state="locked"
+      >
+        <span class="ach__icon" aria-hidden="true">
+          {a.icon}
+        </span>
+        <div>
+          <h2 class="ach__title">
+            <span data-title>{a.secret ? '???' : a.title}</span>
+          </h2>
+          <p class="ach__desc muted" data-desc>
+            {a.secret ? 'Segredo. Explore o site para descobrir.' : a.description}
+          </p>
+          {a.target && (
+            <div
+              class="ach__progress"
+              role="progressbar"
+              aria-valuemin="0"
+              aria-valuemax={a.target}
+              aria-valuenow="0"
+              aria-label={`Progresso de ${a.title}`}
+            >
+              <span class="ach__bar" style="width:0%" />
+              <span class="ach__count" data-count>
+                0/{a.target}
+              </span>
+            </div>
+          )}
+          <p class="ach__reward coin">🪙 {a.rewardCoins}</p>
+          <p class="ach__date muted" data-date hidden />
+        </div>
+      </li>
+    ))}
+  </ul>
+
+  <section class="stats card" aria-labelledby="stats-title">
+    <p class="eyebrow">Números</p>
+    <h2 id="stats-title">Estatísticas</h2>
+    <dl class="stats__grid" id="stats">
+      <div>
+        <dt>Partidas jogadas</dt>
+        <dd data-stat="gamesPlayed">0</dd>
+      </div>
+      <div>
+        <dt>Vitórias</dt>
+        <dd data-stat="gamesWon">0</dd>
+      </div>
+      <div>
+        <dt>Moedas ganhas</dt>
+        <dd data-stat="totalCoinsEarned">0</dd>
+      </div>
+      <div>
+        <dt>Moedas gastas</dt>
+        <dd data-stat="totalCoinsSpent">0</dd>
+      </div>
+      <div>
+        <dt>Itens comprados</dt>
+        <dd data-stat="itemsPurchased">0</dd>
+      </div>
+      <div>
+        <dt>Corações perdidos</dt>
+        <dd data-stat="heartsLost">0</dd>
+      </div>
+      <div>
+        <dt>Fotos ampliadas</dt>
+        <dd data-stat="photosViewed">0</dd>
+      </div>
+      <div>
+        <dt>Segredos encontrados</dt>
+        <dd data-stat="eggs">0/4</dd>
+      </div>
+      {GAMES.map((g) => (
+        <div>
+          <dt>Recorde · {g.title}</dt>
+          <dd data-best={g.id}>—</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="muted stats__note">
+      Horas de soneca estimadas da Cleo: incontáveis (brincadeira, sem fonte científica). Os números
+      acima são locais a este navegador.
+    </p>
+    <div class="cluster">
+      <button type="button" class="btn btn--secondary" id="export-backup">
+        Exportar backup (JSON)
+      </button>
+    </div>
+  </section>
 </BaseLayout>
+
+<script>
+  import { mountAchievements } from '@/features/achievements/achievements-page';
+  void mountAchievements();
+</script>
+
+<style>
+  .ach-head {
+    margin-bottom: var(--space-5);
+  }
+  .ach-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 var(--space-6);
+  }
+  .ach {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: var(--space-3);
+    align-items: start;
+  }
+  .ach[data-state='locked'] {
+    opacity: 0.75;
+  }
+  .ach[data-state='locked'] .ach__icon {
+    filter: grayscale(1);
+  }
+  .ach[data-state='unlocked'] {
+    border-color: var(--color-primary);
+  }
+  .ach__icon {
+    font-size: 2.2rem;
+    line-height: 1;
+  }
+  .ach__title {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-1);
+  }
+  .ach__desc {
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-sm);
+  }
+  .ach__progress {
+    position: relative;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface-2);
+    margin-bottom: var(--space-2);
+  }
+  .ach__bar {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+    background: var(--color-primary);
+    transition: width var(--dur-slow) var(--ease);
+  }
+  .ach__count {
+    position: absolute;
+    right: 0;
+    top: 12px;
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+  .ach__reward {
+    margin: var(--space-3) 0 0;
+    font-weight: 800;
+  }
+  .ach__date {
+    margin: 0;
+    font-size: var(--text-xs);
+  }
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    gap: var(--space-3);
+    margin: 0 0 var(--space-4);
+  }
+  .stats__grid dt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .stats__grid dd {
+    margin: 0;
+    font-weight: 800;
+    font-size: var(--text-xl);
+    font-variant-numeric: tabular-nums;
+  }
+  .stats__note {
+    font-size: var(--text-sm);
+  }
+</style>

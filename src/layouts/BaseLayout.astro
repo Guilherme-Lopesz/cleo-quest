@@ -49,6 +49,15 @@ const base = import.meta.env.BASE_URL;
     <Footer />
     {!hideWalker && <CleoWalker />}
     <div id="toasts" class="toasts" aria-live="polite" aria-atomic="false"></div>
+    <script>
+      const schedule = (fn: () => void) =>
+        'requestIdleCallback' in window
+          ? requestIdleCallback(fn, { timeout: 2500 })
+          : setTimeout(fn, 600);
+      schedule(
+        () => void import('@/features/integrations/site-events').then((m) => m.mountSiteEvents()),
+      );
+    </script>
   </body>
 </html>
 
@@ -83,5 +92,18 @@ const base = import.meta.env.BASE_URL;
   }
   .toast--danger {
     border-color: var(--color-danger);
+  }
+  .pawprint {
+    position: absolute;
+    transform: translate(-50%, -50%) rotate(-20deg);
+    font-size: 14px;
+    opacity: 0.7;
+    pointer-events: none;
+    animation: paw-fade 1.8s forwards;
+  }
+  @keyframes paw-fade {
+    to {
+      opacity: 0;
+    }
   }
 </style>

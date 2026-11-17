@@ -67,6 +67,7 @@ export function mountWalker(host: HTMLElement, assetBase: string): WalkerHandle 
     if (s.state !== lastState) {
       if (s.state === 'sleeping') sayFrom('sleepy');
       lastState = s.state;
+      document.dispatchEvent(new CustomEvent('cleo:walker-state', { detail: { state: s.state } }));
     }
   };
 
