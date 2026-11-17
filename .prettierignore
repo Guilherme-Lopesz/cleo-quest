@@ -1,0 +1,8 @@
+dist
+node_modules
+.astro
+pnpm-lock.yaml
+public/pixel-art/**/*.json
+test-results
+playwright-report
+coverage
