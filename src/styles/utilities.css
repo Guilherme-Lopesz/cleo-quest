@@ -47,8 +47,8 @@
     background-color var(--dur-fast) var(--ease);
 }
 .btn:hover {
-  background: var(--color-primary-strong);
-  color: #fff;
+  background: var(--color-primary-hover);
+  color: var(--color-primary-contrast);
 }
 .btn:active {
   transform: translateY(1px);

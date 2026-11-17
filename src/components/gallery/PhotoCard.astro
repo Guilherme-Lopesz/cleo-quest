@@ -22,9 +22,9 @@ const ratio = photo.width / photo.height;
     type="button"
     class="photo-card__btn"
     data-lightbox-open={index}
-    aria-label={`Abrir foto: ${photo.alt}`}
     style={`aspect-ratio:${ratio.toFixed(3)}`}
   >
+    <span class="visually-hidden">Ampliar foto:</span>
     <img
       src={withBase(photo.thumbnail)}
       alt={photo.alt}

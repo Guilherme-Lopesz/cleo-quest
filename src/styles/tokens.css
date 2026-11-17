@@ -24,10 +24,12 @@
   --color-text-muted: #6f675f;
   --color-primary: var(--cleo-teal);
   --color-primary-contrast: #0f2d2a;
-  --color-primary-strong: var(--cleo-teal-dark);
+  /* texto/links em teal: escurecido para contraste AA sobre creme (≥5:1) */
+  --color-primary-strong: #2f6a63;
+  --color-primary-hover: var(--cleo-teal-light);
   --color-accent: var(--cleo-pink);
   --color-accent-strong: var(--cleo-pink-dark);
-  --color-coin: #c99a2e;
+  --color-coin: #7d5c12;
   --color-heart: #d9686b;
   --color-success: #4f9a6c;
   --color-danger: #c4484b;

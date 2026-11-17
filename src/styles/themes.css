@@ -9,7 +9,8 @@
   --color-text-muted: #b7b0a4;
   --color-primary: var(--cleo-teal-light);
   --color-primary-contrast: #0f2d2a;
-  --color-primary-strong: var(--cleo-teal);
+  --color-primary-strong: #8fcbc2;
+  --color-primary-hover: #b4ddd7;
   --color-accent: #e8b8b7;
   --color-accent-strong: #f0cfcd;
   --color-coin: #e4c25a;
@@ -32,7 +33,8 @@
     --color-text: #efe8da;
     --color-text-muted: #b7b0a4;
     --color-primary: var(--cleo-teal-light);
-    --color-primary-strong: var(--cleo-teal);
+    --color-primary-strong: #8fcbc2;
+    --color-primary-hover: #b4ddd7;
     --color-accent-strong: #f0cfcd;
     --color-coin: #e4c25a;
     --color-heart: #ef8a8d;

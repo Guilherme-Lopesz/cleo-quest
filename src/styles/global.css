@@ -79,6 +79,13 @@ button {
   display: none !important;
 }
 
+/* Áreas interativas que dependem do Game Core ficam inertes até ele carregar,
+   para nenhum toque se perder antes de o handler existir. */
+[aria-busy='true'] {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
 .pixel {
   image-rendering: pixelated;
   image-rendering: crisp-edges;

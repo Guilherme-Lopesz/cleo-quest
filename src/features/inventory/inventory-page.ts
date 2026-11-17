@@ -90,6 +90,7 @@ export async function mountInventory(): Promise<void> {
   };
   await render();
   core.bus.onAny(() => void render());
+  grid.setAttribute('aria-busy', 'false');
 
   grid.addEventListener('click', async (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action]');

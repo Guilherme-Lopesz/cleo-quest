@@ -91,6 +91,7 @@ export async function mountShop(): Promise<void> {
   const core = await getGameCore();
   await render(core, grid);
   core.bus.onAny(() => void render(core, grid));
+  grid.setAttribute('aria-busy', 'false');
 
   grid.addEventListener('click', async (e) => {
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-action="buy"]');

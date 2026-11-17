@@ -12,7 +12,7 @@ test.describe('economia, inventário e casinha', () => {
     // compra o laço (45) — saldo cai para 5 e o cartão vira "No inventário"
     const laco = page.locator('.item-card[data-item-id="laco"]');
     await laco.locator('[data-action="buy"]').click();
-    await expect(page.locator('.toast--success')).toBeVisible();
+    await expect(page.locator('.toast--success').filter({ hasText: /^Comprado!/ })).toBeVisible();
     await expect(page.locator('[data-shop-balance]')).toHaveText('25'); // +20 da conquista "primeiro item"
     await expect(laco).toHaveAttribute('data-state', 'owned');
     await expect(laco.locator('[data-action="buy"]')).toBeHidden();

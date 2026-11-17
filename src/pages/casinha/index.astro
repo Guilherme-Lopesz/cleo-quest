@@ -39,7 +39,12 @@ const rooms: { id: string; title: string; icon: string; blurb: string }[] = [
     </p>
   </header>
 
-  <div class="house" id="house" data-asset-base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+  <div
+    class="house"
+    id="house"
+    aria-busy="true"
+    data-asset-base={import.meta.env.BASE_URL.replace(/\/$/, '')}
+  >
     {rooms.map((room) => (
       <section class="room card" data-room={room.id} aria-labelledby={`room-${room.id}`}>
         <h2 id={`room-${room.id}`} class="room__title">

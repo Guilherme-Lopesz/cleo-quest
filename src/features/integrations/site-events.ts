@@ -147,4 +147,6 @@ export async function mountSiteEvents(): Promise<void> {
 
   // Expõe contagem para a página de conquistas
   (window as unknown as { cleoEggs?: readonly string[] }).cleoEggs = EASTER_EGGS;
+  // Sinal de prontidão: integrações ativas (usado por testes E2E e por quem precisar).
+  document.documentElement.dataset['cleoReady'] = 'true';
 }

@@ -111,6 +111,7 @@ export async function mountHouse(): Promise<void> {
   };
   await render();
   core.bus.onAny(() => void render());
+  house.setAttribute('aria-busy', 'false');
 
   const openChooser = async (slotId: string) => {
     const slot = HOUSE_SLOTS.find((s) => s.id === slotId);

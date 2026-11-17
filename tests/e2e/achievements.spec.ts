@@ -3,11 +3,11 @@ import { test, expect } from '@playwright/test';
 test.describe('conquistas e easter eggs', () => {
   test('carinho na Cleo desbloqueia a primeira conquista uma única vez', async ({ page }) => {
     await page.goto('./');
-    await page.waitForFunction(
-      () => document.querySelector('[data-wallet-balance]')?.textContent !== '—',
-    );
+    await expect(page.locator('html')).toHaveAttribute('data-cleo-ready', 'true');
     await page.locator('.cleo-walker__hit').click();
-    await expect(page.locator('.toast--success')).toContainText('Primeiro carinho');
+    await expect(
+      page.locator('.toast--success').filter({ hasText: 'Primeiro carinho' }),
+    ).toBeVisible();
     await expect(page.locator('[data-wallet-balance]')).toHaveText('70');
     await page.locator('.cleo-walker__hit').click();
     await page.waitForTimeout(400);
@@ -22,9 +22,7 @@ test.describe('conquistas e easter eggs', () => {
 
   test('Konami Code é um segredo pago uma vez; capítulos pagam exploração', async ({ page }) => {
     await page.goto('./historia/');
-    await page.waitForFunction(
-      () => document.querySelector('[data-wallet-balance]')?.textContent !== '—',
-    );
+    await expect(page.locator('html')).toHaveAttribute('data-cleo-ready', 'true');
     for (const k of [
       'ArrowUp',
       'ArrowUp',

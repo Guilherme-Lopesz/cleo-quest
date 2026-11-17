@@ -32,7 +32,7 @@ import { withBase } from '@shared/config/site';
     Nada por aqui ainda. Ganhe moedas no <a href={withBase('/parque')}>parque</a> e visite a{' '}
     <a href={withBase('/loja')}>loja</a>.
   </p>
-  <ul class="grid-auto inv-grid" id="inv-grid">
+  <ul class="grid-auto inv-grid" id="inv-grid" aria-busy="true">
     {CATALOG_ITEMS.map((item) => (
       <ItemCard item={item} mode="inventory" />
     ))}

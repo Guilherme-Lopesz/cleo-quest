@@ -45,7 +45,7 @@ const categories = [...new Set(CATALOG_ITEMS.filter((i) => i.enabled).map((i) =>
     ))}
   </nav>
 
-  <ul class="grid-auto shop-grid" id="shop-grid">
+  <ul class="grid-auto shop-grid" id="shop-grid" aria-busy="true">
     {CATALOG_ITEMS.filter((i) => i.enabled).map((item) => (
       <ItemCard item={item} mode="shop" />
     ))}
