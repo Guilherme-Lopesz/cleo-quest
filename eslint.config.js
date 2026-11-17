@@ -3,6 +3,7 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import astro from 'eslint-plugin-astro';
 import prettier from 'eslint-config-prettier';
+import globals from 'globals';
 
 /**
  * Regras de fronteira arquitetural (SAD §3.3).
@@ -125,8 +126,16 @@ export default defineConfig(
     ...tseslint.configs.disableTypeChecked,
     languageOptions: {
       ...tseslint.configs.disableTypeChecked.languageOptions,
-      globals: { process: 'readonly' },
+      globals: { ...globals.node },
     },
+  },
+  {
+    files: ['src/**/*.ts'],
+    languageOptions: { globals: { ...globals.browser } },
+  },
+  {
+    files: ['scripts/**/*.{ts,mjs}', 'tests/**/*.ts', '*.config.ts'],
+    languageOptions: { globals: { ...globals.node, ...globals.browser } },
   },
   {
     files: ['tests/**/*.ts', 'scripts/**/*.ts'],
