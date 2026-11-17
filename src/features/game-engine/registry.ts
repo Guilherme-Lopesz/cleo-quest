@@ -17,6 +17,33 @@ export const GAMES: MinigameDefinition[] = [
     icon: '🧶',
     load: () => import('@minigames/yarn-catcher').then((m) => m.createModule()),
   },
+  {
+    id: GAME_IDS.fishing,
+    title: 'Pescaria',
+    description: 'Espere o sinal, puxe a linha no tempo certo e veja o que a Cleo pesca.',
+    instructions: [
+      'Toque (ou espaço) para lançar a linha.',
+      'Quando aparecer o "!", toque de novo para puxar.',
+      'Puxar cedo demais espanta os peixes e custa um coração.',
+      '10 lançamentos; pegue 5 peixes para vencer.',
+    ],
+    engine: 'phaser',
+    icon: '🎣',
+    load: () => import('@minigames/fishing').then((m) => m.createModule()),
+  },
+  {
+    id: GAME_IDS.memory,
+    title: 'Memória Felina',
+    description: 'Encontre os pares de fotos da Cleo com o menor número de tentativas.',
+    instructions: [
+      'Vire duas cartas por vez; pares iguais ficam abertos.',
+      'Cinco erros seguidos custam um coração.',
+      'Menos tentativas, mais pontos.',
+    ],
+    engine: 'dom',
+    icon: '🃏',
+    load: () => import('@minigames/cat-memory').then((m) => m.createModule()),
+  },
 ];
 
 export function gameById(id: GameId | string): MinigameDefinition | undefined {
