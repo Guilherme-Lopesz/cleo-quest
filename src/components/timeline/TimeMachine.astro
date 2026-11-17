@@ -1,0 +1,161 @@
+---
+/**
+ * Máquina do tempo (Mestre §4.3/§8.4): slider + botões anterior/próximo + rótulo
+ * textual. Sincroniza fase e foto. Totalmente operável por teclado.
+ */
+import type { Photo } from '@/features/gallery/photo-schema';
+import { PHASES } from '@/content/phases';
+import { withBase } from '@shared/config/site';
+
+interface Props {
+  photos: Photo[];
+}
+const { photos } = Astro.props;
+const stops = photos
+  .filter((p) => p.date)
+  .map((p) => ({
+    id: p.id,
+    src: withBase(p.src),
+    thumb: withBase(p.thumbnail),
+    alt: p.alt,
+    caption: p.caption ?? '',
+    date: p.date!,
+    phase: PHASES.find((ph) => ph.id === p.phase)?.title ?? '',
+    width: p.width,
+    height: p.height,
+  }));
+const first = stops[0];
+---
+
+{first && (
+  <section class="time-machine card" aria-labelledby="tm-title">
+    <p class="eyebrow">Viagem no tempo</p>
+    <h2 id="tm-title">Máquina do tempo</h2>
+    <p class="muted">Arraste o controle ou use os botões para ver a Cleo crescendo.</p>
+    <div class="time-machine__view">
+      <img
+        class="time-machine__img"
+        src={first.src}
+        alt={first.alt}
+        width={first.width}
+        height={first.height}
+        loading="lazy"
+        decoding="async"
+        data-tm-img
+      />
+      <p class="time-machine__label" aria-live="polite">
+        <strong data-tm-phase>{first.phase}</strong>
+        <span data-tm-date>{first.date}</span>
+        <span class="muted" data-tm-caption>
+          {first.caption}
+        </span>
+      </p>
+    </div>
+    <div class="time-machine__controls">
+      <button type="button" class="btn btn--secondary" data-tm-prev aria-label="Momento anterior">
+        ←
+      </button>
+      <label class="time-machine__slider">
+        <span class="visually-hidden">Posição no tempo</span>
+        <input type="range" min="0" max={stops.length - 1} value="0" step="1" data-tm-range />
+      </label>
+      <button type="button" class="btn btn--secondary" data-tm-next aria-label="Próximo momento">
+        →
+      </button>
+    </div>
+    <script type="application/json" data-tm-data set:html={JSON.stringify(stops)} />
+  </section>
+)}
+
+<script>
+  const root = document.querySelector<HTMLElement>('.time-machine');
+  if (root) {
+    const stops = JSON.parse(root.querySelector('[data-tm-data]')!.textContent ?? '[]') as {
+      src: string;
+      alt: string;
+      caption: string;
+      date: string;
+      phase: string;
+      width: number;
+      height: number;
+    }[];
+    const img = root.querySelector<HTMLImageElement>('[data-tm-img]')!;
+    const range = root.querySelector<HTMLInputElement>('[data-tm-range]')!;
+    const phase = root.querySelector('[data-tm-phase]')!;
+    const date = root.querySelector('[data-tm-date]')!;
+    const caption = root.querySelector('[data-tm-caption]')!;
+    const months = [
+      'jan',
+      'fev',
+      'mar',
+      'abr',
+      'mai',
+      'jun',
+      'jul',
+      'ago',
+      'set',
+      'out',
+      'nov',
+      'dez',
+    ];
+    const fmt = (iso: string) => {
+      const [y, m] = iso.split('-');
+      return `${months[Number(m) - 1] ?? ''} ${y}`;
+    };
+    const go = (i: number) => {
+      const idx = Math.max(0, Math.min(stops.length - 1, i));
+      const s = stops[idx]!;
+      range.value = String(idx);
+      img.src = s.src;
+      img.alt = s.alt;
+      img.width = s.width;
+      img.height = s.height;
+      phase.textContent = s.phase;
+      date.textContent = fmt(s.date);
+      caption.textContent = s.caption;
+    };
+    range.addEventListener('input', () => go(Number(range.value)));
+    root
+      .querySelector('[data-tm-prev]')!
+      .addEventListener('click', () => go(Number(range.value) - 1));
+    root
+      .querySelector('[data-tm-next]')!
+      .addEventListener('click', () => go(Number(range.value) + 1));
+    go(0);
+  }
+</script>
+
+<style>
+  .time-machine__view {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: center;
+    margin: var(--space-4) 0;
+  }
+  .time-machine__img {
+    max-height: 60dvh;
+    width: auto;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+  }
+  .time-machine__label {
+    display: grid;
+    text-align: center;
+    margin: 0;
+  }
+  .time-machine__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .time-machine__slider {
+    flex: 1;
+    display: block;
+  }
+  .time-machine__slider input {
+    width: 100%;
+    accent-color: var(--color-primary);
+    min-height: var(--tap-target);
+  }
+</style>

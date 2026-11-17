@@ -1,0 +1,74 @@
+---
+import type { Photo } from '@/features/gallery/photo-schema';
+import { withBase } from '@shared/config/site';
+
+interface Props {
+  photo: Photo;
+  index: number;
+  eager?: boolean;
+}
+const { photo, index, eager = false } = Astro.props;
+const ratio = photo.width / photo.height;
+---
+
+<li
+  class="photo-card"
+  data-photo-id={photo.id}
+  data-phase={photo.phase ?? ''}
+  data-tags={photo.tags.join(' ')}
+  data-date={photo.date ?? ''}
+>
+  <button
+    type="button"
+    class="photo-card__btn"
+    data-lightbox-open={index}
+    aria-label={`Abrir foto: ${photo.alt}`}
+    style={`aspect-ratio:${ratio.toFixed(3)}`}
+  >
+    <img
+      src={withBase(photo.thumbnail)}
+      alt={photo.alt}
+      width={photo.width}
+      height={photo.height}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+    {photo.placeholder && <span class="photo-card__flag">ilustração provisória</span>}
+  </button>
+</li>
+
+<style>
+  .photo-card {
+    list-style: none;
+    margin: 0;
+  }
+  .photo-card__btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--color-surface-2);
+    position: relative;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .photo-card__btn:hover {
+    transform: translateY(-2px);
+  }
+  .photo-card__btn img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .photo-card__flag {
+    position: absolute;
+    left: var(--space-2);
+    bottom: var(--space-2);
+    font-size: var(--text-xs);
+    padding: 2px var(--space-2);
+    border-radius: var(--radius-pill);
+    background: var(--color-overlay);
+    color: #fff;
+  }
+</style>

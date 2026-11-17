@@ -1,0 +1,119 @@
+---
+/**
+ * Lightbox acessível (Mestre §13.3): <dialog> nativo, foco preso, Escape fecha,
+ * setas navegam, botões anterior/próximo visíveis. Recebe a lista de fotos
+ * por JSON inline (ids, src, alt, legenda) para não depender da ordem do DOM.
+ */
+import type { Photo } from '@/features/gallery/photo-schema';
+import { withBase } from '@shared/config/site';
+
+interface Props {
+  photos: Photo[];
+}
+const { photos } = Astro.props;
+const data = photos.map((p) => ({
+  id: p.id,
+  src: withBase(p.src),
+  alt: p.alt,
+  caption: p.caption ?? '',
+  date: p.date ?? '',
+  width: p.width,
+  height: p.height,
+}));
+---
+
+<dialog id="lightbox" class="lightbox" aria-label="Foto ampliada">
+  <div class="lightbox__frame">
+    <button
+      type="button"
+      class="btn btn--secondary btn--icon lightbox__close"
+      data-lightbox-close
+      aria-label="Fechar"
+    >
+      ✕
+    </button>
+    <figure class="lightbox__figure">
+      <img class="lightbox__img" alt="" data-lightbox-img />
+      <figcaption class="lightbox__caption">
+        <span data-lightbox-caption></span>
+        <span class="muted" data-lightbox-meta></span>
+      </figcaption>
+    </figure>
+    <div class="lightbox__nav">
+      <button
+        type="button"
+        class="btn btn--secondary"
+        data-lightbox-prev
+        aria-label="Foto anterior"
+      >
+        ← Anterior
+      </button>
+      <span class="lightbox__counter" data-lightbox-counter aria-live="polite"></span>
+      <button type="button" class="btn btn--secondary" data-lightbox-next aria-label="Próxima foto">
+        Próxima →
+      </button>
+    </div>
+  </div>
+</dialog>
+<script type="application/json" id="lightbox-data" set:html={JSON.stringify(data)} />
+<script>
+  import { mountLightbox } from '@/features/gallery/lightbox';
+  mountLightbox();
+</script>
+
+<style>
+  .lightbox {
+    border: 0;
+    padding: 0;
+    width: min(100vw, 72rem);
+    max-width: 100vw;
+    max-height: 100dvh;
+    background: transparent;
+  }
+  .lightbox::backdrop {
+    background: var(--color-overlay);
+  }
+  .lightbox__frame {
+    position: relative;
+    display: grid;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    margin: var(--space-3);
+  }
+  .lightbox__close {
+    position: absolute;
+    top: var(--space-3);
+    right: var(--space-3);
+    z-index: 1;
+  }
+  .lightbox__figure {
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+    justify-items: center;
+  }
+  .lightbox__img {
+    max-height: 70dvh;
+    width: auto;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+    background: var(--color-surface-2);
+  }
+  .lightbox__caption {
+    display: grid;
+    text-align: center;
+    font-weight: 600;
+  }
+  .lightbox__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2);
+  }
+  .lightbox__counter {
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
+  }
+</style>

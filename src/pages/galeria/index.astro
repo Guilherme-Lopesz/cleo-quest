@@ -1,8 +1,127 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import PhotoCard from '@/components/gallery/PhotoCard.astro';
+import Lightbox from '@/components/gallery/Lightbox.astro';
+import { PHOTOS, allTags } from '@/features/gallery/photos';
+import { PHASES } from '@/content/phases';
+
+const tags = allTags();
+const placeholders = PHOTOS.filter((p) => p.placeholder).length;
 ---
 
-<BaseLayout title="Galeria" description="Fotos da Cleo por fase e categoria.">
-  <h1>Galeria</h1>
-  <p class="muted">Fotos da Cleo por fase e categoria. Esta seção está sendo construída.</p>
+<BaseLayout title="Galeria" description="Fotos da Cleo por fase e categoria, com lightbox.">
+  <header class="gallery-head">
+    <p class="eyebrow">Álbum</p>
+    <h1>Galeria</h1>
+    <p class="muted">
+      {PHOTOS.length} fotos. Filtre por fase ou assunto e toque para ampliar.
+      {placeholders > 0 &&
+        ` (${placeholders} ainda são ilustrações provisórias até as fotos reais serem importadas.)`}
+    </p>
+  </header>
+
+  <form class="filters" id="gallery-filters" aria-label="Filtros da galeria">
+    <div class="filters__group">
+      <label for="filter-phase">Fase</label>
+      <select id="filter-phase" name="phase">
+        <option value="">Todas</option>
+        {PHASES.map((p) => (
+          <option value={p.id}>{p.title}</option>
+        ))}
+      </select>
+    </div>
+    <div class="filters__group">
+      <label for="filter-tag">Assunto</label>
+      <select id="filter-tag" name="tag">
+        <option value="">Todos</option>
+        {tags.map((t) => (
+          <option value={t}>{t}</option>
+        ))}
+      </select>
+    </div>
+    <p class="filters__count muted" id="gallery-count" aria-live="polite">
+      {PHOTOS.length} fotos
+    </p>
+  </form>
+
+  <ul class="gallery-grid" id="gallery-grid">
+    {PHOTOS.map((photo, i) => (
+      <PhotoCard photo={photo} index={i} eager={i < 4} />
+    ))}
+  </ul>
+  <p class="muted" id="gallery-empty" hidden>
+    Nenhuma foto com esses filtros. A Cleo está ofendida.
+  </p>
+
+  <Lightbox photos={PHOTOS} />
 </BaseLayout>
+
+<script>
+  import { applyFilters } from '@/features/gallery/filters';
+
+  const form = document.getElementById('gallery-filters') as HTMLFormElement;
+  const grid = document.getElementById('gallery-grid')!;
+  const count = document.getElementById('gallery-count')!;
+  const empty = document.getElementById('gallery-empty')!;
+  const phase = form.elements.namedItem('phase') as HTMLSelectElement;
+  const tag = form.elements.namedItem('tag') as HTMLSelectElement;
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('fase')) phase.value = params.get('fase')!;
+  if (params.get('tag')) tag.value = params.get('tag')!;
+
+  const run = () => {
+    const n = applyFilters(grid, phase.value, tag.value);
+    count.textContent = `${n} ${n === 1 ? 'foto' : 'fotos'}`;
+    empty.hidden = n > 0;
+    const q = new URLSearchParams();
+    if (phase.value) q.set('fase', phase.value);
+    if (tag.value) q.set('tag', tag.value);
+    history.replaceState(null, '', q.size ? `?${q}` : location.pathname);
+  };
+  form.addEventListener('change', run);
+  form.addEventListener('submit', (e) => e.preventDefault());
+  run();
+</script>
+
+<style>
+  .gallery-head {
+    margin-bottom: var(--space-4);
+  }
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: end;
+    margin-bottom: var(--space-5);
+  }
+  .filters__group {
+    display: grid;
+    gap: var(--space-1);
+    font-weight: 700;
+  }
+  .filters select {
+    min-height: var(--tap-target);
+    min-width: 11rem;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+  .filters__count {
+    margin: 0 0 var(--space-3);
+  }
+  .gallery-grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-3);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+  }
+  @media (min-width: 760px) {
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    }
+  }
+</style>

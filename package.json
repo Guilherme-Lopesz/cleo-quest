@@ -19,7 +19,8 @@
     "test:e2e": "playwright test",
     "sprites": "tsx scripts/sprites/generate.ts",
     "photos:import": "tsx scripts/import-photos.ts",
-    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "photos:placeholders": "tsx scripts/photos/placeholders.ts"
   },
   "dependencies": {
     "astro": "^7.4.12",

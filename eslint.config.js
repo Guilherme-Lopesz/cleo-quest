@@ -133,6 +133,18 @@ export default defineConfig(
     },
   },
   {
+    // Módulos virtuais do Astro (astro:content) não existem no programa TS do ESLint;
+    // o `astro check`/tsc validam esse arquivo com os tipos gerados em .astro/.
+    files: ['src/features/content/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
+      '@typescript-eslint/no-unsafe-return': 'off',
+      '@typescript-eslint/no-unsafe-call': 'off',
+      '@typescript-eslint/no-unsafe-argument': 'off',
+    },
+  },
+  {
     files: ['**/*.{js,mjs,cjs}'],
     ...tseslint.configs.disableTypeChecked,
     languageOptions: {
