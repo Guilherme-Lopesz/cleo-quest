@@ -49,6 +49,27 @@ const isActive = (href: string) => {
   </nav>
 </header>
 
+<script>
+  // Saldo no cabeçalho: carrega o Game Core quando o navegador estiver ocioso,
+  // para não atrasar a página. Reage ao estado de UI (fonte: repositório).
+  const el = document.querySelector<HTMLElement>('[data-wallet-balance]');
+  const schedule = (fn: () => void) =>
+    'requestIdleCallback' in window
+      ? requestIdleCallback(fn, { timeout: 1500 })
+      : setTimeout(fn, 300);
+  if (el) {
+    schedule(() => {
+      void import('@/features/game-core').then(async ({ getGameCore }) => {
+        const core = await getGameCore();
+        core.ui.subscribe((s) => {
+          el.textContent = s.ready ? String(s.balance) : '—';
+          el.closest('.badge')?.classList.toggle('is-unavailable', s.storageStatus !== 'ok');
+        });
+      });
+    });
+  }
+</script>
+
 <style>
   .site-header {
     position: sticky;

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import GameStage from '@/components/game/GameStage.astro';
+import { GAMES } from '@/features/game-engine/registry';
+import { withBase } from '@shared/config/site';
+
+export function getStaticPaths() {
+  return GAMES.map((g) => ({
+    params: { game: g.id },
+    props: { title: g.title, description: g.description },
+  }));
+}
+const { game } = Astro.params;
+const { title, description } = Astro.props as { title: string; description: string };
+---
+
+<BaseLayout title={title} description={description} hideWalker>
+  <nav class="game-nav" aria-label="Voltar">
+    <a href={withBase('/parque')}>← Parque</a>
+    <h1 class="game-nav__title">{title}</h1>
+  </nav>
+  <GameStage gameId={game!} title={title} />
+</BaseLayout>
+
+<script>
+  import { getGameCore } from '@/features/game-core';
+  import { gameById } from '@/features/game-engine/registry';
+  import { GameHost } from '@/features/game-engine/host';
+
+  const root = document.getElementById('game-root')!;
+  const def = gameById(root.dataset['gameId'] ?? '');
+  if (def) {
+    const core = await getGameCore();
+    const host = new GameHost(core, def, {
+      root,
+      stage: document.getElementById('game-stage')!,
+      hearts: document.getElementById('game-hearts')!,
+      score: document.getElementById('game-score')!,
+      timer: document.getElementById('game-timer')!,
+      hint: document.getElementById('game-hint')!,
+      overlay: document.getElementById('game-overlay')!,
+    });
+    host.mount();
+    document.getElementById('game-pause')?.addEventListener('click', () => host.pause());
+    (window as unknown as { cleoGameHost?: GameHost }).cleoGameHost = host;
+  }
+</script>
+
+<style>
+  .game-nav {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+  .game-nav__title {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+</style>

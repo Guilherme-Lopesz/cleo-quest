@@ -1,0 +1,155 @@
+---
+/** Palco do minigame: HUD (corações, pontos, tempo), área da engine e overlays. */
+interface Props {
+  gameId: string;
+  title: string;
+}
+const { gameId, title } = Astro.props;
+---
+
+<section
+  class="game"
+  id="game-root"
+  data-game-id={gameId}
+  data-phase="intro"
+  aria-label={`Minigame ${title}`}
+>
+  <div class="game__hud" role="group" aria-label="Status da partida">
+    <div class="game__hearts" id="game-hearts" aria-live="polite"></div>
+    <div class="game__score">
+      <span class="visually-hidden">Pontos:</span>🧶 <span id="game-score">0</span>
+    </div>
+    <div class="game__timer">
+      <span class="visually-hidden">Tempo restante:</span>⏱ <span id="game-timer">—</span>
+    </div>
+    <button
+      type="button"
+      class="btn btn--secondary btn--icon game__pause"
+      id="game-pause"
+      aria-label="Pausar"
+    >
+      ⏸
+    </button>
+  </div>
+  <div class="game__stage-wrap">
+    <div class="game__stage" id="game-stage"></div>
+    <div class="game-overlay" id="game-overlay" hidden></div>
+  </div>
+  <p class="game__hint" id="game-hint" aria-live="polite"></p>
+</section>
+
+<style is:global>
+  .game {
+    display: grid;
+    gap: var(--space-3);
+    max-width: 32rem;
+    margin-inline: auto;
+  }
+  .game__hud {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-2) var(--space-3);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .game__hearts {
+    color: var(--color-heart);
+    letter-spacing: 1px;
+    font-size: var(--text-lg);
+  }
+  .game__hearts.is-low {
+    animation: pulse 0.8s ease-in-out infinite alternate;
+  }
+  @keyframes pulse {
+    to {
+      transform: scale(1.12);
+    }
+  }
+  .game__score,
+  .game__timer {
+    margin-left: auto;
+  }
+  .game__timer {
+    margin-left: 0;
+  }
+  .game__stage-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 360 / 560;
+    max-height: 78dvh;
+    margin-inline: auto;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    touch-action: none; /* evita scroll acidental dentro do jogo */
+  }
+  .game__stage,
+  .game__stage canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+  }
+  .game-overlay[hidden] {
+    display: none;
+  }
+  .game-overlay {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    padding: var(--space-4);
+    background: color-mix(in srgb, var(--color-background) 86%, transparent);
+    backdrop-filter: blur(4px);
+    overflow: auto;
+  }
+  .game-overlay__panel {
+    width: min(100%, 24rem);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    box-shadow: var(--shadow-md);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .game-overlay__panel h2 {
+    margin: 0;
+  }
+  .game-overlay__list {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .game-overlay__actions {
+    margin-top: var(--space-2);
+  }
+  .game-result {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+    margin: 0;
+  }
+  .game-result dt {
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+  }
+  .game-result dd {
+    margin: 0;
+    font-weight: 800;
+    font-size: var(--text-lg);
+  }
+  .game-result__phrase {
+    font-style: italic;
+    margin: 0;
+  }
+  .game__hint {
+    min-height: 1.5em;
+    text-align: center;
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+</style>

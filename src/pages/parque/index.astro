@@ -1,8 +1,99 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import CleoSprite from '@/components/character/CleoSprite.astro';
+import { GAMES } from '@/features/game-engine/registry';
+import { GAME_CONFIGS } from '@core/config/games';
+import { withBase } from '@shared/config/site';
 ---
 
-<BaseLayout title="Parque de diversões" description="Minigames do mundinho da Cleo.">
-  <h1>Parque de diversões</h1>
-  <p class="muted">Minigames do mundinho da Cleo. Esta seção está sendo construída.</p>
+<BaseLayout
+  title="Parque de diversões"
+  description="Minigames do mundinho da Cleo: ganhe Cleo Coins jogando."
+>
+  <header class="park-head">
+    <p class="eyebrow">Minigames</p>
+    <h1>Parque de diversões</h1>
+    <p class="muted">
+      Cada partida começa com 5 corações. Ao terminar, o jogo informa o resultado e as Cleo Coins
+      são calculadas pelas regras centrais — nada de trapaça, nem da Cleo.
+    </p>
+  </header>
+  <ul class="grid-auto games">
+    {GAMES.map((g) => {
+      const cfg = GAME_CONFIGS[g.id];
+      return (
+        <li class="card game-card">
+          <div class="game-card__top">
+            <span class="game-card__icon" aria-hidden="true">
+              {g.icon}
+            </span>
+            <CleoSprite
+              animation={g.id === 'yarn-catcher' ? 'playing' : 'idle'}
+              frame={0}
+              scale={2}
+            />
+          </div>
+          <h2>{g.title}</h2>
+          <p>{g.description}</p>
+          <p class="muted">
+            Recompensa: {cfg?.reward.participation}–{cfg?.reward.maxPerSession}{' '}
+            <span class="coin">🪙</span> por partida
+          </p>
+          <a class="btn" href={withBase(`/parque/${g.id}`)} data-best-score={g.id}>
+            Jogar
+          </a>
+          <p class="muted game-card__best" data-best-for={g.id} hidden>
+            Seu recorde: <strong data-best-value />
+          </p>
+        </li>
+      );
+    })}
+  </ul>
 </BaseLayout>
+
+<script>
+  import { getGameCore } from '@/features/game-core';
+
+  const core = await getGameCore();
+  const stats = await core.progress.statistics();
+  for (const el of document.querySelectorAll<HTMLElement>('[data-best-for]')) {
+    const best = stats.bestScores[el.dataset['bestFor'] ?? ''];
+    if (best !== undefined && best > 0) {
+      el.querySelector('[data-best-value]')!.textContent = String(best);
+      el.hidden = false;
+    }
+  }
+</script>
+
+<style>
+  .park-head {
+    margin-bottom: var(--space-5);
+  }
+  .games {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .game-card {
+    display: grid;
+    gap: var(--space-2);
+    align-content: start;
+  }
+  .game-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+  }
+  .game-card__icon {
+    font-size: 2.5rem;
+  }
+  .game-card h2 {
+    margin: 0;
+  }
+  .game-card .btn {
+    justify-self: start;
+  }
+  .game-card__best {
+    margin: 0;
+  }
+</style>
