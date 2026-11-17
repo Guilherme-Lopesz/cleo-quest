@@ -220,7 +220,7 @@ export function createFishingScene(
       this.phase = 'bite';
       this.alert.setVisible(true);
       this.message.setText('AGORA! Toque!');
-      ctx.emitUiEvent({ type: 'PLAY_FEEDBACK', sound: 'click' });
+      ctx.emitUiEvent({ type: 'PLAY_FEEDBACK', sound: 'chirp' });
       if (!ctx.reducedMotion) {
         this.tweens.add({
           targets: this.bob,

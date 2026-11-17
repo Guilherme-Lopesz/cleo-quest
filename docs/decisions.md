@@ -65,3 +65,19 @@ Decisão: `scripts/serve-dist.mjs` serve `dist/` sob o `base` do Pages, sem fall
 
 Contexto: o CDN do Playwright é bloqueado neste ambiente de desenvolvimento.
 Decisão: `PW_CHANNEL=chrome` usa o Chrome do sistema localmente; no CI o Chromium gerenciado é instalado normalmente. Limitação de ambiente, não do produto.
+
+## D-014 — Data de nascimento e coerência do conteúdo
+
+Contexto: proprietário informou nascimento em 05/03/2026 (≈ 8 meses em nov/2026). Os exemplos citavam fase "adulta" e datas de 2024–2025.
+Decisão: `birthDate = '2026-03-05'`; fases passam a chegada → filhote → jovem → **hoje**; ilustrações provisórias, diário e museu redatados entre abr e nov de 2026.
+Impacto: contador de dias ativo no hero; ids `adulta-*` viraram `hoje-*` (substituir pelo mesmo id ao importar fotos reais).
+
+## D-015 — Voz da Cleo com gravações; interface continua em chiptune
+
+Contexto: proprietário enviou 8 efeitos de gato (bibliotecas e ElevenLabs).
+Decisão: gravações reais só para a **voz/reações da Cleo**; efeitos de interface (captura, moeda, compra, conquista) seguem sintetizados, coerentes com a pixel art.
+Uso: `meow` (2 variações: carinho, feliz, equipar, vitória), `meowSleepy` (acordá-la, caminha), `purr` (comer/beber), `scratch` (arranhador, carinho demais), `chirp` ("tremido" de caça: mordida na Pescaria).
+Descartados: ronronar de 12 s (redundante, 3× maior) e miado "aflito" (quase inaudível, −35 LUFS, e emocionalmente pesado para um jogo "sem pressão").
+Tratamento (ffmpeg): recorte, mono, passa-alta, passa-baixa 9 kHz, −18 LUFS, fades, 22 kHz/56 kbps → 49 KB no total, em `public/audio/cleo/`.
+Regras: só tocam em resposta a ação do visitante (adormecer por inatividade é silencioso); carregam após o primeiro gesto e só com som ligado; variação de afinação ±6%; fallback sintetizado se um arquivo falhar.
+Licença: nomes dos arquivos seguem o padrão da Pixabay (licença de uso livre); **confirmar** a origem antes de uso comercial. Créditos no rodapé.

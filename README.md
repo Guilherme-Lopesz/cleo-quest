@@ -29,18 +29,19 @@ pnpm dev          # http://localhost:4321/cleo-quest/
 
 ## Conteúdo que o proprietário edita (sem tocar em componentes)
 
-| O quê                                         | Onde                                                         |
-| --------------------------------------------- | ------------------------------------------------------------ |
-| Data de nascimento (ativa o contador de dias) | `src/shared/config/cleo.ts` → `birthDate`                    |
-| Fases da vida                                 | `src/content/phases.ts`                                      |
-| Capítulos da timeline                         | `src/content/timeline/*.md`                                  |
-| Diário secreto                                | `src/content/diary/*.md`                                     |
-| Museu                                         | `src/content/museum/*.md`                                    |
-| Carta da Cleo                                 | `src/content/letter.ts`                                      |
-| Falas da Cleo                                 | `src/content/phrases.ts`                                     |
-| Itens da loja e preços                        | `src/content/catalog/items.json` (validado por Zod no build) |
-| Recompensas e limites por jogo                | `src/features/game-core/config/games.ts`                     |
-| Conquistas                                    | `src/features/game-core/config/achievements.ts`              |
+| O quê                                 | Onde                                                         |
+| ------------------------------------- | ------------------------------------------------------------ |
+| Data de nascimento (contador de dias) | `src/shared/config/cleo.ts` → `birthDate`                    |
+| Sons da Cleo                          | `public/audio/cleo/*.mp3` (mesmos nomes para substituir)     |
+| Fases da vida                         | `src/content/phases.ts`                                      |
+| Capítulos da timeline                 | `src/content/timeline/*.md`                                  |
+| Diário secreto                        | `src/content/diary/*.md`                                     |
+| Museu                                 | `src/content/museum/*.md`                                    |
+| Carta da Cleo                         | `src/content/letter.ts`                                      |
+| Falas da Cleo                         | `src/content/phrases.ts`                                     |
+| Itens da loja e preços                | `src/content/catalog/items.json` (validado por Zod no build) |
+| Recompensas e limites por jogo        | `src/features/game-core/config/games.ts`                     |
+| Conquistas                            | `src/features/game-core/config/achievements.ts`              |
 
 ### Importar as fotos reais
 

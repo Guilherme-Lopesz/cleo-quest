@@ -270,6 +270,7 @@ export class GameHost {
     const reward = session.rewardGranted ?? 0;
     const won = session.outcome === 'WIN';
     const phrase = won ? pickPhrase('reward') : pickPhrase('gameOver');
+    if (won) setTimeout(() => audio().play('meow'), 550);
     const base = import.meta.env.BASE_URL;
     this.overlay(
       `<p class="eyebrow">${won ? 'Vitória' : 'Fim de jogo'}</p>

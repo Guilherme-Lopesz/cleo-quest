@@ -1,6 +1,6 @@
 ---
 title: 'O passarinho da janela'
-date: '2026-05'
+date: '2026-07'
 photo: 'jovem-02'
 mood: 'curiosa'
 ---

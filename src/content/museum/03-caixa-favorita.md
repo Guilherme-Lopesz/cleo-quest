@@ -1,7 +1,7 @@
 ---
 name: 'A caixa favorita'
-period: 'Adulta'
-photo: 'adulta-02'
+period: 'Hoje'
+photo: 'hoje-02'
 order: 3
 ---
 

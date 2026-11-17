@@ -1,7 +1,7 @@
 ---
 title: 'Sobre a caixa nova'
-date: '2026-03'
-photo: 'adulta-02'
+date: '2026-09'
+photo: 'hoje-02'
 mood: 'exigente'
 ---
 

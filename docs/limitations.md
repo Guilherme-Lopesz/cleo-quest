@@ -3,10 +3,9 @@
 ## Dependem do proprietário
 
 1. **Fotos reais.** A galeria tem 14 _ilustrações provisórias_ (marcadas na UI e no manifesto com `placeholder: true`), feitas com a própria pixel art da Cleo. A meta de 200+ fotos depende de `pnpm photos:import` com as fotos e o `alt` de cada uma.
-2. **Data de nascimento.** O contador de dias está implementado e oculto até `birthDate` ser preenchida.
-3. **Timeline, diário e museu.** Textos de exemplo, plausíveis mas inventados, na voz da Cleo. Precisam ser revisados com fatos reais.
-4. **Sons reais.** Miado e ronronar são sintetizados. Os slots `meow`/`purr` em `features/audio/audio-manager.ts` aceitam gravações autorizadas.
-5. **Pixel art.** A Cleo é gerada por código com a paleta e os traços descritos no Mestre §2.2 (consistente em todas as telas e animações). Uma revisão comparando com fotos reais pode pedir ajustes de proporção ou marcas, feitos em `scripts/sprites/cleo.ts` + `pnpm sprites`.
+2. **Timeline, diário e museu.** Textos de exemplo, plausíveis mas inventados, na voz da Cleo. Precisam ser revisados com fatos reais.
+3. **Sons.** A voz da Cleo usa efeitos de biblioteca e de ElevenLabs (D-015), não gravações dela. Se houver gravações reais, basta substituir os arquivos em `public/audio/cleo/` mantendo os nomes. Confirmar a licença dos arquivos de biblioteca.
+4. **Pixel art.** A Cleo é gerada por código com a paleta e os traços descritos no Mestre §2.2 (consistente em todas as telas e animações). Uma revisão comparando com fotos reais pode pedir ajustes de proporção ou marcas, feitos em `scripts/sprites/cleo.ts` + `pnpm sprites`.
 
 ## Técnicas
 

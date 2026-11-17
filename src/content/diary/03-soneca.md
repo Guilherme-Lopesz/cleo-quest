@@ -1,7 +1,7 @@
 ---
 title: 'Relatório de soneca'
-date: '2026-08'
-photo: 'adulta-04'
+date: '2026-10'
+photo: 'hoje-04'
 mood: 'sonolenta'
 ---
 

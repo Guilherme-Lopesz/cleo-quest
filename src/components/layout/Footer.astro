@@ -35,7 +35,9 @@ import { SITE } from '@shared/config/site';
       Limpar os dados do site apaga tudo. Cleo Coins não têm valor real.
     </p>
     <p class="muted site-footer__credits">
-      Feito com carinho para a Cleo. Pixel art, código e miados fictícios: projeto pessoal ·
+      Feito com carinho para a Cleo. Pixel art e código: projeto pessoal. Sons de gato: Dragon
+      Studio, Magiaz, scottishperson, stu9 e ElevenLabs (efeitos de biblioteca, não gravações da
+      Cleo) ·
       <a href={SITE.repository} rel="noopener">
         código-fonte
       </a>
@@ -88,7 +90,15 @@ import { SITE } from '@shared/config/site';
     render(savePreferences({ theme: next }));
   });
   soundBtn?.addEventListener('click', () => {
-    render(savePreferences({ muted: !loadPreferences().muted }));
+    const next = savePreferences({ muted: !loadPreferences().muted });
+    render(next);
+    // confirmação audível: a Cleo mia quando o som é ligado (e as gravações carregam)
+    if (!next.muted) {
+      void import('@/features/audio/audio-manager').then(async ({ audio }) => {
+        await audio().preload();
+        audio().play('meow');
+      });
+    }
   });
   volume?.addEventListener('change', () => {
     render(savePreferences({ volume: Number(volume.value) }));

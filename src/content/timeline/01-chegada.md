@@ -2,7 +2,7 @@
 title: 'O dia em que tudo virou meu'
 order: 1
 phase: 'chegada'
-period: 'Primeiros dias'
+period: 'Primeiras semanas'
 photos: ['chegada-01', 'chegada-02', 'chegada-03']
 caption: 'Eu cheguei pequena. A casa não estava preparada.'
 milestone: true

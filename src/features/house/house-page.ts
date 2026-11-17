@@ -7,6 +7,7 @@ import { loadPreferences, prefersReducedMotion } from '@/features/preferences/pr
 import { toast } from '@/features/ui/toast';
 import { itemImage } from '@/features/ui/format';
 import { pickPhrase } from '@/content/phrases';
+import { audio, type SoundName } from '@/features/audio/audio-manager';
 
 const errorMessage = (e: DomainError): string =>
   e.code === 'INVALID_PLACEMENT'
@@ -24,6 +25,14 @@ const INTERACTION_ANIM = {
   drink: 'eating',
   scratch: 'scratch',
 } as const;
+
+const INTERACTION_SOUND: Record<keyof typeof INTERACTION_ANIM, SoundName> = {
+  sleep: 'meowSleepy',
+  play: 'meow',
+  eat: 'purr',
+  drink: 'purr',
+  scratch: 'scratch',
+};
 
 const INTERACTION_PHRASE: Record<keyof typeof INTERACTION_ANIM, string> = {
   sleep: 'Zzz… cinco minutinhos.',
@@ -139,6 +148,7 @@ export async function mountHouse(): Promise<void> {
           toast(`${item.name} colocado em ${slot.label.toLowerCase()}.`, 'success');
           moveCleo(slot.room);
           animator.play('happy', () => animator.play('idle'));
+          audio().play('meow');
         }
       });
       li.appendChild(b);
@@ -162,6 +172,7 @@ export async function mountHouse(): Promise<void> {
       if (!kind) return;
       moveCleo(slot.room);
       say(slot.room, INTERACTION_PHRASE[kind]);
+      audio().play(INTERACTION_SOUND[kind]);
       const anim = INTERACTION_ANIM[kind];
       animator.play(anim, () => animator.play('idle'));
       if (anim === 'sleeping') setTimeout(() => animator.play('idle'), 3500);

@@ -1,12 +1,8 @@
-/**
- * Dados da personagem fornecidos pelo proprietário.
- * TODO_OWNER: preencher `birthDate` (ISO, ex.: "2021-03-15") para ativar o
- * contador de dias de vida no hero (Mestre §4.1 / §18).
- */
+/** Dados da personagem fornecidos pelo proprietário (Mestre §4.1 / §18). */
 export const CLEO = {
   name: 'Cleo',
   nickname: 'Floquinha',
-  birthDate: null as string | null,
+  birthDate: '2026-03-05' as string | null,
   pronouns: 'ela',
 } as const;
 

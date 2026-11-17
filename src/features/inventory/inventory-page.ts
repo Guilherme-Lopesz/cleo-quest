@@ -7,6 +7,7 @@ import { loadPreferences, prefersReducedMotion } from '@/features/preferences/pr
 import { toast } from '@/features/ui/toast';
 import { SLOT_LABELS } from '@/features/ui/format';
 import { pickPhrase } from '@/content/phrases';
+import { audio } from '@/features/audio/audio-manager';
 
 const errorMessage = (e: DomainError): string => {
   switch (e.code) {
@@ -108,7 +109,10 @@ export async function mountInventory(): Promise<void> {
           ? await core.inventory.unequip(item.equipSlot)
           : await core.inventory.equip(id);
       if (!r.ok) toast(errorMessage(r.error), 'danger');
-      else animator.play('happy', () => animator.play('idle'));
+      else {
+        animator.play('happy', () => animator.play('idle'));
+        audio().play('meow');
+      }
     } else if (btn.dataset['action'] === 'use') {
       const r = await core.inventory.consume(id);
       if (!r.ok) toast(errorMessage(r.error), 'danger');

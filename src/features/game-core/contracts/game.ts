@@ -22,7 +22,10 @@ export type GameUiEvent =
       reaction: 'SCRATCH' | 'BLINK' | 'PURR' | 'SURPRISED' | 'ANGRY' | 'HAPPY' | 'SAD';
     }
   | { type: 'SHOW_HINT'; message: string }
-  | { type: 'PLAY_FEEDBACK'; sound: 'capture' | 'miss' | 'heart' | 'win' | 'lose' | 'click' }
+  | {
+      type: 'PLAY_FEEDBACK';
+      sound: 'capture' | 'miss' | 'heart' | 'win' | 'lose' | 'click' | 'chirp' | 'meow';
+    }
   | { type: 'SCORE'; score: number }
   | { type: 'TIMER'; remainingMs: number };
 

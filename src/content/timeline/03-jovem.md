@@ -2,7 +2,7 @@
 title: 'O colete teal'
 order: 3
 phase: 'jovem'
-period: 'Primeiro ano'
+period: 'Uns seis meses'
 photos: ['jovem-01', 'jovem-02', 'jovem-03']
 caption: 'Dizem que combina com meus olhos. Eu sei.'
 milestone: true

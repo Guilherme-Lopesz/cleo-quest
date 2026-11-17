@@ -2,7 +2,7 @@
  * Importa fotos reais de `photos-source/` para a galeria.
  * 1. Coloque as fotos em photos-source/ (originais são preservados, pasta ignorada pelo git).
  * 2. Descreva cada foto em photos-source/metadata.json:
- *    { "IMG_0001": { "alt": "Cleo dormindo na caixa", "date": "2026-03-10", "phase": "adulta", "tags": ["soneca","caixa"] } }
+ *    { "IMG_0001": { "alt": "Cleo dormindo na caixa", "date": "2026-03-10", "phase": "hoje", "tags": ["soneca","caixa"] } }
  * 3. pnpm photos:import
  */
 import { join } from 'node:path';

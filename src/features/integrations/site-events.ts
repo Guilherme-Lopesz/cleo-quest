@@ -26,6 +26,7 @@ const KONAMI = [
  */
 export async function mountSiteEvents(): Promise<void> {
   const core = await getGameCore();
+  audio(); // registra os listeners de desbloqueio cedo, antes do primeiro gesto
   const walker = () =>
     (
       window as unknown as {
@@ -51,10 +52,24 @@ export async function mountSiteEvents(): Promise<void> {
   core.bus.on('EasterEggFound', () => walker()?.react('surprised'));
   core.bus.on('ItemPurchased', () => audio().play('purchase'));
 
+  // Voz da Cleo acompanha a reação. Só estados provocados pelo visitante têm som:
+  // sentar/dormir por inatividade é silencioso (nada toca sem alguém pedir).
+  const VOICE: Partial<Record<string, Parameters<ReturnType<typeof audio>['play']>[0]>> = {
+    happy: 'meow',
+    surprised: 'meowSleepy',
+    scratch: 'scratch',
+    angry: 'scratch',
+    eating: 'purr',
+    playing: 'meow',
+  };
+  document.addEventListener('cleo:walker-state', (e) => {
+    const sound = VOICE[(e as CustomEvent<{ state: string }>).detail.state];
+    if (sound) audio().play(sound);
+  });
+
   // Primeiro carinho
   document.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('.cleo-walker__hit')) {
-      audio().play(Math.random() < 0.5 ? 'meow' : 'purr');
       void core.achievements.unlockDirect(achievementId('primeiro-carinho'));
     }
   });

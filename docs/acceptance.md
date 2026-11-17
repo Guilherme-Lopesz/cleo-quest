@@ -6,14 +6,14 @@ Legenda: **U** teste unitário · **I** integração (Vitest + IndexedDB) · **E
 
 ### Conteúdo
 
-| Critério                                    | Status | Evidência                                                                                        |
-| ------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------ |
-| Hero apresenta a Cleo                       | ✅     | E `smoke.spec`, `a11y.spec`                                                                      |
-| Contador de idade usa data real configurada | ⚠️ P   | Implementado e testado (U `cleo-config.test`); **aguarda a data** em `src/shared/config/cleo.ts` |
-| Timeline exibe capítulos e fotos            | ✅     | E `gallery.spec › história`                                                                      |
-| Galeria filtra e abre imagens               | ✅     | E `gallery.spec` (filtro, lightbox, teclado, foco de volta)                                      |
-| Tema Hora da Soneca funciona                | ✅     | E `preferences.spec`; axe nos dois temas                                                         |
-| Layout é responsivo                         | ✅     | Toda a suíte E roda em Pixel 7 e desktop                                                         |
+| Critério                                    | Status | Evidência                                                      |
+| ------------------------------------------- | ------ | -------------------------------------------------------------- |
+| Hero apresenta a Cleo                       | ✅     | E `smoke.spec`, `a11y.spec`                                    |
+| Contador de idade usa data real configurada | ✅     | `birthDate = 2026-03-05`; U `cleo-config.test`; E `smoke.spec` |
+| Timeline exibe capítulos e fotos            | ✅     | E `gallery.spec › história`                                    |
+| Galeria filtra e abre imagens               | ✅     | E `gallery.spec` (filtro, lightbox, teclado, foco de volta)    |
+| Tema Hora da Soneca funciona                | ✅     | E `preferences.spec`; axe nos dois temas                       |
+| Layout é responsivo                         | ✅     | Toda a suíte E roda em Pixel 7 e desktop                       |
 
 ### Jogo
 
@@ -51,25 +51,25 @@ Legenda: **U** teste unitário · **I** integração (Vitest + IndexedDB) · **E
 
 ## SAD §21
 
-| Critério                                           | Status | Evidência                                                                         |
-| -------------------------------------------------- | ------ | --------------------------------------------------------------------------------- |
-| Publica no GitHub Pages                            | ⏳     | Workflow pronto; depende de _Settings → Pages → GitHub Actions_                   |
-| Home não carrega Phaser                            | ✅     | E `smoke.spec`                                                                    |
-| Phaser só ao abrir minigame                        | ✅     | E `yarn-game.spec`, `other-games.spec` (Memória não carrega)                      |
-| Minigame não importa repositórios nem altera saldo | ✅     | regra `no-restricted-imports` no ESLint (CI)                                      |
-| Core inicia e encerra sessões                      | ✅     | U, I                                                                              |
-| Corações por partida, restaurados na próxima       | ✅     | I "nova partida restaura corações"                                                |
-| Zero corações encerra                              | ✅     | U, I                                                                              |
-| Recompensas calculadas pelo Core                   | ✅     | U, I                                                                              |
-| Recompensas idempotentes                           | ✅     | I (`grantReward`, sessão, conquista, capítulo); E (carinho repetido)              |
-| Compra debita e adiciona na mesma transação        | ✅     | I                                                                                 |
-| Falha de compra não altera saldo nem inventário    | ✅     | I (falha injetada)                                                                |
-| Inventário persiste após reload                    | ✅     | I, E                                                                              |
-| Item não possuído não pode ser equipado            | ✅     | U, I                                                                              |
-| Dados persistidos passam por validação             | ✅     | I "registro corrompido não é sobrescrito"                                         |
-| Migração de schema tem testes                      | ✅     | I (fixture v1). Só existe v1; o padrão para v2 está documentado em `dexie-db.ts`  |
-| Galeria usa thumbnails e lazy loading              | ✅     | E `gallery.spec`                                                                  |
-| Áudio não inicia automaticamente                   | ✅     | U `audio.test`; mudo por padrão                                                   |
-| `prefers-reduced-motion` respeitado                | ✅     | CSS global + FSM + animador + jogos (`ctx.reducedMotion`)                         |
-| Fluxos críticos com testes automatizados           | ✅     | 68 E2E                                                                            |
-| CI bloqueia deploy se validações falharem          | ✅     | Comprovado: o 1º deploy foi bloqueado por um E2E instável, corrigido em `8fa6f19` |
+| Critério                                           | Status | Evidência                                                                                    |
+| -------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------- |
+| Publica no GitHub Pages                            | ⏳     | Workflow pronto; depende de _Settings → Pages → GitHub Actions_                              |
+| Home não carrega Phaser                            | ✅     | E `smoke.spec`                                                                               |
+| Phaser só ao abrir minigame                        | ✅     | E `yarn-game.spec`, `other-games.spec` (Memória não carrega)                                 |
+| Minigame não importa repositórios nem altera saldo | ✅     | regra `no-restricted-imports` no ESLint (CI)                                                 |
+| Core inicia e encerra sessões                      | ✅     | U, I                                                                                         |
+| Corações por partida, restaurados na próxima       | ✅     | I "nova partida restaura corações"                                                           |
+| Zero corações encerra                              | ✅     | U, I                                                                                         |
+| Recompensas calculadas pelo Core                   | ✅     | U, I                                                                                         |
+| Recompensas idempotentes                           | ✅     | I (`grantReward`, sessão, conquista, capítulo); E (carinho repetido)                         |
+| Compra debita e adiciona na mesma transação        | ✅     | I                                                                                            |
+| Falha de compra não altera saldo nem inventário    | ✅     | I (falha injetada)                                                                           |
+| Inventário persiste após reload                    | ✅     | I, E                                                                                         |
+| Item não possuído não pode ser equipado            | ✅     | U, I                                                                                         |
+| Dados persistidos passam por validação             | ✅     | I "registro corrompido não é sobrescrito"                                                    |
+| Migração de schema tem testes                      | ✅     | I (fixture v1). Só existe v1; o padrão para v2 está documentado em `dexie-db.ts`             |
+| Galeria usa thumbnails e lazy loading              | ✅     | E `gallery.spec`                                                                             |
+| Áudio não inicia automaticamente                   | ✅     | U `audio.test`; E `audio.spec` (nada baixado com som desligado; gravações carregam ao ligar) |
+| `prefers-reduced-motion` respeitado                | ✅     | CSS global + FSM + animador + jogos (`ctx.reducedMotion`)                                    |
+| Fluxos críticos com testes automatizados           | ✅     | 68 E2E                                                                                       |
+| CI bloqueia deploy se validações falharem          | ✅     | Comprovado: o 1º deploy foi bloqueado por um E2E instável, corrigido em `8fa6f19`            |
