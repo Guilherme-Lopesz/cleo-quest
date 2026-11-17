@@ -4,6 +4,7 @@ import { achievementById, EASTER_EGGS, type EasterEggId } from '@core/config/ach
 import { achievementId, rewardSourceId } from '@core/contracts';
 import { toast } from '@/features/ui/toast';
 import { pickPhrase } from '@/content/phrases';
+import { audio } from '@/features/audio/audio-manager';
 
 const KONAMI = [
   'ArrowUp',
@@ -40,6 +41,7 @@ export async function mountSiteEvents(): Promise<void> {
       'success',
       5000,
     );
+    audio().play('achievement');
   });
   core.bus.on('RewardGranted', (e) => {
     if (e.sourceId.startsWith('chapter:'))
@@ -47,10 +49,12 @@ export async function mountSiteEvents(): Promise<void> {
     if (e.sourceId.startsWith('egg:')) toast(`+${e.amount} 🪙 — segredo encontrado!`, 'success');
   });
   core.bus.on('EasterEggFound', () => walker()?.react('surprised'));
+  core.bus.on('ItemPurchased', () => audio().play('purchase'));
 
   // Primeiro carinho
   document.addEventListener('click', (e) => {
     if ((e.target as HTMLElement).closest('.cleo-walker__hit')) {
+      audio().play(Math.random() < 0.5 ? 'meow' : 'purr');
       void core.achievements.unlockDirect(achievementId('primeiro-carinho'));
     }
   });

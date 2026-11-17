@@ -17,6 +17,10 @@ import { SITE } from '@shared/config/site';
         </span>
         <span data-sound-label>Som desligado</span>
       </button>
+      <label class="volume" for="volume">
+        <span>Volume</span>
+        <input type="range" id="volume" min="0" max="1" step="0.1" />
+      </label>
       <button type="button" class="btn btn--secondary" id="toggle-motion" aria-pressed="false">
         <span aria-hidden="true">🐢</span>
         <span data-motion-label>Menos movimento</span>
@@ -50,6 +54,7 @@ import { SITE } from '@shared/config/site';
   const themeBtn = document.getElementById('toggle-theme');
   const soundBtn = document.getElementById('toggle-sound');
   const motionBtn = document.getElementById('toggle-motion');
+  const volume = document.getElementById('volume') as HTMLInputElement | null;
 
   function render(prefs: Preferences) {
     const theme = effectiveTheme(prefs);
@@ -66,6 +71,11 @@ import { SITE } from '@shared/config/site';
         ? 'Som desligado'
         : 'Som ligado';
     }
+    if (volume) {
+      volume.value = String(prefs.volume);
+      volume.disabled = prefs.muted;
+      volume.setAttribute('aria-valuetext', `${Math.round(prefs.volume * 100)}%`);
+    }
     if (motionBtn) {
       motionBtn.setAttribute('aria-pressed', String(prefs.motion === 'reduced'));
       motionBtn.querySelector('[data-motion-label]')!.textContent =
@@ -79,6 +89,10 @@ import { SITE } from '@shared/config/site';
   });
   soundBtn?.addEventListener('click', () => {
     render(savePreferences({ muted: !loadPreferences().muted }));
+  });
+  volume?.addEventListener('change', () => {
+    render(savePreferences({ volume: Number(volume.value) }));
+    void import('@/features/audio/audio-manager').then(({ audio }) => audio().play('click'));
   });
   motionBtn?.addEventListener('click', () => {
     const cur = loadPreferences().motion;
@@ -116,6 +130,21 @@ import { SITE } from '@shared/config/site';
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
+  }
+  .volume {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: var(--tap-target);
+    padding: 0 var(--space-3);
+    font-weight: 700;
+  }
+  .volume input {
+    accent-color: var(--color-primary);
+    width: 7rem;
+  }
+  .volume input:disabled {
+    opacity: 0.4;
   }
   .site-footer__note,
   .site-footer__credits {

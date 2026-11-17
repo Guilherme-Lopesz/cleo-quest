@@ -12,6 +12,7 @@ import type {
 import { gameConfig } from '@core/config/games';
 import { pickPhrase } from '@/content/phrases';
 import { loadPreferences, prefersReducedMotion } from '@/features/preferences/preferences';
+import { audio } from '@/features/audio/audio-manager';
 
 export type HostPhase =
   'intro' | 'loading' | 'playing' | 'paused' | 'finishing' | 'result' | 'error';
@@ -200,6 +201,9 @@ export class GameHost {
       case 'SHOW_HINT':
         this.el.hint.textContent = e.message;
         break;
+      case 'PLAY_FEEDBACK':
+        audio().play(e.sound);
+        break;
       default:
         break;
     }
@@ -351,5 +355,6 @@ export class GameHost {
       await this.core.sessions.abandon(this.session.id).catch(() => undefined);
     await this.module?.destroy().catch(() => undefined);
     this.module = null;
+    audio().stopAll();
   }
 }
